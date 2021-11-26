@@ -1,12 +1,12 @@
 <template>
   <div>
-    <input 
-    type="email" 
+    <input
+    type="email"
     name="email"
     v-model="email"
     placeholder="email"/>
-    <input 
-    type="password" 
+    <input
+    type="password"
     name="password"
     v-model="password"
     placeholder="mot de passe"/>
@@ -23,18 +23,18 @@ export default {
   data () {
     return {
       email: '',
-      password:'',
+      password: ''
     }
   },
   methods: {
-    async register() {
+    async register () {
       const response = await AuthServices.register({
         email: this.email,
         password: this.password
       })
       console.log(response.data)
     }
-  },
+  }
 }
 </script>
 
