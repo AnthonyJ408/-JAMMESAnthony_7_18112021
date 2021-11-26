@@ -5,32 +5,32 @@ const { body } = require("express-validator");
 const auth = require("../middleware/auth");
 const valid = require("../middleware/validator");
 const multer = require("../middleware/multer-config");
-const sauceCtrl = require("../controllers/network");
-//CRUD Sauces avec vérifications des saisies via Express-validator
+const messageCtrl = require("../controllers/message");
+//CRUD Messages avec vérifications des saisies via Express-validator
 //Chaques routes est contrôllées avec Auth pour vérifier si l'utilisateur a les droits avant d'être exécutées
-router.get("/", auth, sauceCtrl.getAllSauce);
+router.get("/", auth, messageCtrl.getAllMessage);
 router.post(
   "/",
-  body("sauce")
+  body("message")
     .isLength({ max: 50 })
     .withMessage("must be a maximum of 50 chars long"),
   valid,
   auth,
   multer,
-  sauceCtrl.createSauce
+  messageCtrl.createMessage
 );
-router.get("/:id", auth, sauceCtrl.getOneSauce);
+router.get("/:id", auth, messageCtrl.getOneMessage);
 router.put(
   "/:id",
-  body("sauce")
+  body("message")
     .isLength({ max: 50 })
     .withMessage("must be a maximum of 50 chars long"),
   valid,
   auth,
   multer,
-  sauceCtrl.modifySauce
+  messageCtrl.modifyMessage
 );
-router.delete("/:id", auth, sauceCtrl.deleteSauce);
+router.delete("/:id", auth, messageCtrl.deleteMessage);
 router.post(
   "/:id/like",
   body("userId")
@@ -42,7 +42,7 @@ router.post(
     .withMessage("must be a maximum of 2 chars long"),
   valid,
   auth,
-  sauceCtrl.likeSauce
+  messageCtrl.likeMessage
 );
-//Exports des routes sauces
+//Exports des routes messages
 module.exports = router;
