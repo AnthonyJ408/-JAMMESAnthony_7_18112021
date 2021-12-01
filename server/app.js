@@ -3,7 +3,6 @@ const express = require("express");
 const app = express();
 const path = require("path");
 const cors = require('cors');
-const {Sequelize} = require('sequelize')
 const db = require("./models");
 //BodyParser pour transformer le corps de la requête en JSON
 const bodyParser = require("body-parser");
@@ -18,7 +17,5 @@ app.use("/images", express.static(path.join(__dirname, "images")));
 app.use("/api/messages", messageRoutes);
 app.use("/api/auth", userRoutes);
 //Export d'express pour le "require" dans d'autres fichiers
-db.sequelize.sync({ force: true }).then(() => {
-    console.log("Drop and re-sync db.");
-  });
+db.sequelize.sync()
 module.exports = app;

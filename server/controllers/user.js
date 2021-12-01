@@ -15,6 +15,7 @@ exports.signup = (req, res, next) => {
       const user = {
         email: req.body.email,
         password: hash,
+        fullName:req.body.fullName
       };
       //Enregistrement du nouvel utilisateur dans la base de donnée avec son email et un mot de passe crypté
       User
@@ -28,8 +29,10 @@ exports.login = (req, res, next) => {
   //Récupérer l'utilisateur dans la base de donnée via son adresse mail qui est dans la requête
   const email = req.body.email;
   var condition = email? { email: { [Op.like]: `%${email}%` } } : null;
-  User.findAll({ where: condition })
+  console.log(condition)
+  User.findOne({ where: condition })
   .then((user) => {
+    console.log(user.password)
     if (!user) {
       return res.status(401).json({ error: "Utilisateur introuvable!" });
     }
@@ -42,8 +45,9 @@ exports.login = (req, res, next) => {
         }
         //UserId encodé pour gérer les utilisateurs, pour pouvoir reconnaître quel utilisateur a créé quel produit
         res.status(200).json({
-          userId: user._id,
-          token: jwt.sign({ userId: user._id }, "MEGASECRETkey25054426165", {
+          fullName: user.fullName,
+          userId: user.id,
+          token: jwt.sign({ userId: user.id }, "MEGASECRETkey25054426165", {
             expiresIn: "24h",
           }),
         });
