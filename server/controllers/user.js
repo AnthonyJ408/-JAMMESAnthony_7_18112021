@@ -32,7 +32,6 @@ exports.login = (req, res, next) => {
   console.log(condition)
   User.findOne({ where: condition })
   .then((user) => {
-    console.log(user.password)
     if (!user) {
       return res.status(401).json({ error: "Utilisateur introuvable!" });
     }

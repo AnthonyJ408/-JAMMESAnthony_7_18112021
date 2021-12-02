@@ -6,13 +6,22 @@
           <v-col cols="12" sm="8" md="4" lg="4">
             <v-card elevation="0">
               <v-img
+                class="animate__animated animate__flip"
                 src="../assets/icon-above-font.png"
                 alt="Groupomania"
-                contain
-                height="200"
+                height="300"
               ></v-img>
               <v-card-text>
+                <v-alert
+                  dismissible
+                  shaped
+                  text
+                  v-if="message"
+                  :type="successful ? 'success' : 'error'"
+                  >{{ message }}</v-alert
+                >
                 <v-form
+                  class="login animate__animated animate__rollIn"
                   ref="form"
                   v-model="valid"
                   lazy-validation
@@ -21,7 +30,7 @@
                   <v-text-field
                     v-model="user.email"
                     :rules="emailRules"
-                    class="form-control rounded-0"
+                    class="form-control rounded-0 "
                     label="Entrez votre email"
                     name="email"
                     prepend-inner-icon="mdi-email"
@@ -33,7 +42,7 @@
                     v-model="user.password"
                     :rules="passwordRules"
                     :counter="20"
-                    class="form-control rounded-0"
+                    class="form-control rounded-0 "
                     label="Entrez votre mot de passe"
                     name="password"
                     prepend-inner-icon="mdi-lock"
@@ -48,23 +57,38 @@
                     :disabled="!valid"
                     @click="handleLogin"
                   >
-                    <v-progress-circular
-                      v-show="loading"
-                      indeterminate
-                      color="primary"
-                    >
-                    </v-progress-circular>
                     Se connecter</v-btn
                   >
+                  <v-progress-circular
+                    v-show="loading"
+                    indeterminate
+                    color="primary"
+                  >
+                  </v-progress-circular>
                   <v-card-actions class="text--secondary">
                     <v-spacer></v-spacer>
                     Pas de compte?
-                    <a @click="switchToCreateAccount" class="pl-2 black--text"
+                    <a
+                      @
+                      @click="
+                        triggerTransition(
+                          'login',
+                          'animate__rollOut',
+                          'register'
+                        )
+                      "
+                      class="pl-2 black--text"
                       >S'inscrire</a
                     >
                   </v-card-actions>
                 </v-form>
-                <v-form ref="form" v-model="valid" lazy-validation v-else>
+                <v-form
+                  class="register animate__animated animate__rollIn"
+                  ref="form"
+                  v-model="valid"
+                  lazy-validation
+                  v-else
+                >
                   <v-text-field
                     v-model="user.email"
                     :rules="emailRules"
@@ -91,11 +115,12 @@
                   </v-text-field>
                   <v-text-field
                     v-model="user.lastName"
-                    :counter="10"
+                    :counter="15"
                     :rules="lastNameRules"
                     required
                     class="form-control rounded-0"
                     label="Entrez votre nom"
+                    placeholder="Entrez votre nom"
                     name="lastName"
                     prepend-inner-icon="mdi-account"
                     type="text"
@@ -105,7 +130,7 @@
 
                   <v-text-field
                     v-model="user.firstName"
-                    :counter="10"
+                    :counter="15"
                     :rules="firstNameRules"
                     required
                     class="form-control rounded-0"
@@ -116,26 +141,33 @@
                     outlined
                   >
                   </v-text-field>
-
+                  <v-progress-circular
+                    v-show="loading"
+                    indeterminate
+                    color="primary"
+                  ></v-progress-circular>
                   <v-btn
                     class="rounded-0 primary"
                     x-large
                     block
-                    :disabled="!valid"
+                    :disabled="!valid || loading"
                     @click="handleRegister"
                   >
-                    <v-progress-circular
-                      v-show="loading"
-                      indeterminate
-                      color="primary"
-                    >
-                    </v-progress-circular>
                     S'inscrire</v-btn
                   >
+
                   <v-card-actions class="text--secondary">
                     <v-spacer></v-spacer>
                     Déjà membre?
-                    <a @click="switchToLogin" class="pl-2 black--text"
+                    <a
+                      @click="
+                        triggerTransition(
+                          'register',
+                          'animate__rollOut',
+                          'login'
+                        )
+                      "
+                      class="pl-2 black--text"
                       >Se connecter</a
                     >
                   </v-card-actions>
@@ -153,22 +185,22 @@
 import User from '../models/user'
 export default {
   name: 'SignIn',
-
   data () {
     return {
       user: new User('', '', '', '', ''),
       submitted: false,
       successful: false,
       mode: 'login',
+      message: '',
       loading: false,
       valid: true,
       firstNameRules: [
         (v) => !!v || 'Prénom requis',
-        (v) => (v && v.length <= 10) || 'Doit contenir au moins 10 caractères'
+        (v) => (v && v.length <= 15) || 'Doit contenir maximum 15 caractères'
       ],
       lastNameRules: [
         (v) => !!v || 'Nom requis',
-        (v) => (v && v.length <= 10) || 'Doit contenir au moins 10 caractères'
+        (v) => (v && v.length <= 15) || 'Doit contenir maximum 15 caractères'
       ],
       emailRules: [
         (v) => !!v || 'E-mail requis',
@@ -195,16 +227,22 @@ export default {
     }
   },
   methods: {
-    handleLogin  () {
+    handleLogin () {
       this.loading = true
       this.$refs.form.validate()
-      if (this.$refs.form.validate() === true) {
+      if (this.$refs.form.validate()) {
         this.loading = false
-        this.$store.dispatch('auth/login', this.user)
-        this.$router.push('/UserHome')
-        this.$refs.form.reset()
-      } else {
-        this.loading = false
+        this.$store.dispatch('auth/login', this.user).then(
+          () => {
+            this.$router.push('/UserHome')
+            this.$refs.form.reset()
+          },
+          (error) => {
+            console.log(error)
+            this.loading = false
+            this.message = error.response.data.error
+          }
+        )
       }
     },
     handleRegister () {
@@ -212,21 +250,41 @@ export default {
       this.message = ''
       this.submitted = true
       this.$refs.form.validate()
-      if (this.$refs.form.validate() === true) {
-        this.$store.dispatch('auth/register', this.user)
-        this.successful = true
-        this.$refs.form.reset()
-        this.mode = 'login'
-      } else {
-        this.successful = false
+      if (this.$refs.form.validate()) {
+        this.$store.dispatch('auth/register', this.user).then(
+          (data) => {
+            console.log(data)
+            this.message = data.message
+            this.successful = true
+            this.$refs.form.reset()
+            this.mode = 'login'
+          },
+          (error) => {
+            console.log(error)
+            this.message =
+              error.response.data.error !== undefined
+                ? error.response.data.error.errors[0].message
+                : error.response.data.errors[0].msg
+
+            this.successful = false
+          }
+        )
       }
     },
-    switchToCreateAccount () {
-      this.mode = 'create'
-    },
-    switchToLogin () {
-      this.mode = 'login'
+    triggerTransition (object, animation, mode) {
+      const element = document.querySelector(`.${object}`)
+      element.classList.add(`${animation}`)
+      setTimeout(() => {
+        this.mode = mode
+      }, 1000)
     }
+
+    // switchToCreateAccount () {
+    //   this.mode = 'create'
+    // },
+    // switchToLogin () {
+    //   this.mode = 'login'
+    // }
   }
 }
 </script>

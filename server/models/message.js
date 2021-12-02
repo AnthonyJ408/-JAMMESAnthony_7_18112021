@@ -1,11 +1,9 @@
-module.exports = (sequelize, DataTypes) => {
+module.exports = (sequelize, Sequelize) => {
   sequelize.define('Message',{
-    email: {
-      type: DataTypes,STRING,
-      unique:true
+    message: {
+      type: Sequelize.TEXT
     },
-    password: DataTypes, STRING,
-    // firstName: DataTypes, STRING,
-    // lastName: DataTypes, STRING,
-    // admin: false
+    fileUrl:{
+      type: Sequelize.STRING(50)
+    }
   })}

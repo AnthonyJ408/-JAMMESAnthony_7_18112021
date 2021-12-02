@@ -3,8 +3,9 @@ import Router from 'vue-router'
 import UserHome from './views/UserHome.vue'
 import SignIn from './views/SignIn.vue'
 import BoardAdmin from './views/BoardAdmin.vue'
-import BoardUser from './views/BoardUser.vue'
+import UserFavorites from './views/UserFavorites.vue'
 import UserProfile from './views/UserProfile.vue'
+import UserPost from './views/UserPost.vue'
 
 Vue.use(Router)
 export const router = new Router({
@@ -17,26 +18,33 @@ export const router = new Router({
     },
     {
       path: '/UserHome',
+      name: 'UserHome',
       component: UserHome
     },
     {
       path: '/SignIn',
+      name: 'SignIn',
       component: SignIn
     },
     {
       path: '/UserProfile',
-      name: 'UserProfile',
+      name: 'UserPorofile',
       component: UserProfile
     },
     {
       path: '/admin',
-      name: 'admin',
+      name: 'Admin',
       component: BoardAdmin
     },
     {
-      path: '/user',
-      name: 'user',
-      component: BoardUser
+      path: '/UserFavorites',
+      name: 'UserFavorites',
+      component: UserFavorites
+    },
+    {
+      path: '/UserPost',
+      name: 'UserPost',
+      component: UserPost
     }
   ]
 })

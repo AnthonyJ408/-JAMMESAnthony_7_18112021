@@ -1,26 +1,7 @@
 <template>
   <div id="app">
+    <div >
+      <router-view />
+    </div>
   </div>
 </template>
-
-<script>
-export default {
-  computed: {
-    currentUser () {
-      return this.$store.state.auth.user
-    },
-    showAdminBoard () {
-      if (this.currentUser && this.currentUser.roles) {
-        return this.currentUser.roles.includes('ROLE_ADMIN')
-      }
-      return false
-    }
-  },
-  methods: {
-    logOut () {
-      this.$store.dispatch('auth/logout')
-      this.$router.push('/login')
-    }
-  }
-}
-</script>

@@ -10,7 +10,7 @@
 import UserRequest from '../services/userRequest'
 
 export default {
-  name: 'BoardUser',
+  name: 'UserFavorites',
   data () {
     return {
       content: ''

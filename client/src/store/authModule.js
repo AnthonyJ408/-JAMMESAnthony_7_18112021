@@ -17,7 +17,6 @@ export const auth = {
         },
         error => {
           commit('loginFailure')
-          console.log('hey')
           return Promise.reject(error)
         }
       )

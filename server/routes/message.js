@@ -8,7 +8,7 @@ const multer = require("../middleware/multer-config");
 const messageCtrl = require("../controllers/message");
 //CRUD Messages avec vérifications des saisies via Express-validator
 //Chaques routes est contrôllées avec Auth pour vérifier si l'utilisateur a les droits avant d'être exécutées
-router.get("/", auth, messageCtrl.getAllMessage);
+router.get("/messages", auth, messageCtrl.getAllMessage);
 router.post(
   "/",
   body("message")

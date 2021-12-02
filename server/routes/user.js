@@ -7,7 +7,7 @@ const { body } = require("express-validator");
 //CRUD Users avec vérifications des saisies via Express-validator
 router.post(
   "/signup",
-  body("email").isEmail().withMessage("must be a valid email"),
+  body("email").isEmail().withMessage("L'email doit être valide"),
   body("password")
     .matches(/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/)
     .withMessage("must contain at least eight characters, including at least one number and includes both lower and uppercase letters and special characters"),
@@ -16,7 +16,7 @@ router.post(
 );
 router.post(
   "/login",
-  body("email").isEmail().withMessage("must be a valid email"),
+  body("email").isEmail().withMessage("L'email doit être valide"),
   body("password")
     .matches(/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/)
     .withMessage("must contain at least eight characters, including at least one number and includes both lower and uppercase letters and special characters"),

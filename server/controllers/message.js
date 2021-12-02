@@ -7,7 +7,6 @@ const fs = require("fs");
 
 exports.createMessage = (req, res, next) => {
   const MessageObject = JSON.parse(req.body.message);
-  delete MessageObject._id;
   const message = {
     //L'opérateur spread ... est utilisé pour faire une copie de tous les éléments de req.body
     ...MessageObject,
