@@ -1,32 +1,37 @@
 //Récupération du modèle User de sequelize
-const db = require("../models");
+const db = require('../models');
 const Message = db.messages;
 const Op = db.Sequelize.Op;
 //Package node qui permet d'accéder au dossier du système
-const fs = require("fs");
+const fs = require('fs');
+const { messages } = require('../models');
 
 exports.createMessage = (req, res, next) => {
-  const MessageObject = JSON.parse(req.body.message);
-  const message = {
-    //L'opérateur spread ... est utilisé pour faire une copie de tous les éléments de req.body
-    ...MessageObject,
-    //Récupération de l'image de façon dynamique dans le dossier images
-    imageUrl: `${req.protocol}://${req.get("host")}/images/${
-      req.file.filename
-    }`,
-  };
-  //Méthode "create" utilisée pour envoyer les données enregistrés
-  //dans le modèle Message à la base de données MongoDB sous forme de collections du nom de "messages"
-  Message
-    .create(message)
-    .then(() => res.status(201).json({ message: "registered message !" }))
-    .catch((error) => res.status(400).json({ error }));
+  const messageRequest = req.body;
+  if (req.body.filename != undefined) {
+    const messageFile = {
+      //L'opérateur spread ... est utilisé pour faire une copie de tous les éléments de req.body
+      ...messageRequest,
+      //Récupération de l'image de façon dynamique dans le dossier images
+      imageUrl: `${req.protocol}://${req.get('host')}/images/${
+        req.file.filename
+      }`,
+    };
+    //Méthode "create" utilisée pour envoyer les données enregistrés
+    Message.create(...messageFile)
+      .then(() => res.status(201).json({ message: 'registered message !' }))
+      .catch((error) => res.status(400).json({ error }));
+  } else {
+    Message.create(messageRequest)
+      .then(() => res.status(201).json({ message: 'registered message !' }))
+      .catch((error) => res.status(400).json({ error }));
+  }
 };
 
 exports.getOneMessage = (req, res, next) => {
   const id = req.params.id;
   //Méthode .findByPk qui va retourner une message avec l'id envoyé dans la requête
-  Message.finByPk(id)
+  Message.findByPk(id)
     .then((message) => {
       res.status(200).json(message);
     })
@@ -42,7 +47,7 @@ exports.modifyMessage = (req, res, next) => {
   const messageObject = req.file
     ? {
         ...JSON.parse(req.body.message),
-        imageUrl: `${req.protocol}://${req.get("host")}/images/${
+        imageUrl: `${req.protocol}://${req.get('host')}/images/${
           req.file.filename
         }`,
       }
@@ -50,9 +55,9 @@ exports.modifyMessage = (req, res, next) => {
   //Méthode .updateOne qui prend deux paramétres l'id du produit et le nouveau produit à actualiser
   const id = req.params.id;
   Message.update(req.body, {
-    where: { id: id } && { ...messageObject, id: id }
+    where: { id: id } && { ...messageObject, id: id },
   })
-    .then(() => res.status(200).json({ message: "Message modified!" }))
+    .then(() => res.status(200).json({ message: 'Message modified!' }))
     .catch((error) => res.status(400).json({ error }));
 };
 
@@ -61,12 +66,12 @@ exports.deleteMessage = (req, res, next) => {
   //on retrouve l'objet avec l'id contenu dans les paramétres de route
   Message.findByPk({ id: id })
     .then((message) => {
-      const filename = message.imageUrl.split("/images/")[1];
+      const filename = message.imageUrl.split('/images/')[1];
       //Supprime l'image avec la fonction unlink de fs
       fs.unlink(`images/${filename}`, () => {
         //Méthode .deleteOne qui va supprimer un objet avec l'id renseigné dans les paramétres
-        Message.destroy({where:{ id: id }})
-          .then(() => res.status(200).json({ message: "Message deleted !" }))
+        Message.destroy({ where: { id: id } })
+          .then(() => res.status(200).json({ message: 'Message deleted !' }))
           .catch((error) => res.status(400).json({ error }));
       });
     })
@@ -74,8 +79,9 @@ exports.deleteMessage = (req, res, next) => {
 };
 
 exports.getAllMessage = (req, res, next) => {
+  console.log(Message);
   //Méthode .find qui va retourner toute la colection messages stockée dans MongoDB
-  Message.findAll()
+  Message.findAll({ limit: 50, order: [['updatedAt', 'DESC']] })
     .then((messages) => {
       res.status(200).json(messages);
     })
@@ -92,16 +98,17 @@ exports.likeMessage = (req, res, next) => {
     case 1:
       //Avec la valeur 1 on ajoute +1 dans le tableau des "likes", et on ajoute l'id
       //de l'utilisateur au tableau "usersLiked" avec les opérateurs MongoDB "$inc,$push"
-      Message.update( {
+      Message.update(
+        {
           $inc: { likes: 1 },
           $push: { usersLiked: req.body.userId },
-        },{where:{ id:id }})
+        },
+        { where: { id: id } }
+      )
         .then(() => {
-          res
-            .status(200)
-            .json({
-              message: `User: ${req.body.userId} liked message:${req.params.id}`,
-            });
+          res.status(200).json({
+            message: `User: ${req.body.userId} liked message:${req.params.id}`,
+          });
         })
         .catch((error) => {
           res.status(400).json({ error: error });
@@ -110,16 +117,17 @@ exports.likeMessage = (req, res, next) => {
     case -1:
       //Avec la valeur -1 on ajoute +1 dans le tableau des "dislikes", et on ajoute l'id
       // de l'utilisateur au tableau "usersdisliked" avec les opérateurs MongoDB "$inc,$push"
-      Message.update( {
-        $inc: { dislikes: 1 },
-        $push: { usersLiked: req.body.userId },
-      },{where:{ id:id }})
+      Message.update(
+        {
+          $inc: { dislikes: 1 },
+          $push: { usersLiked: req.body.userId },
+        },
+        { where: { id: id } }
+      )
         .then(() => {
-          res
-            .status(200)
-            .json({
-              message: `User: ${req.body.userId} disliked message:${req.params.id}`,
-            });
+          res.status(200).json({
+            message: `User: ${req.body.userId} disliked message:${req.params.id}`,
+          });
         })
         .catch((error) => {
           res.status(400).json({ error: error });
@@ -134,16 +142,17 @@ exports.likeMessage = (req, res, next) => {
           if (
             arrayLike.usersLiked.find((userId) => userId === req.body.userId)
           ) {
-            Message.update({
+            Message.update(
+              {
                 $inc: { likes: -1 },
                 $pull: { usersLiked: req.body.userId },
-              }, {where:{ id: id }})
+              },
+              { where: { id: id } }
+            )
               .then(() => {
-                res
-                  .status(200)
-                  .json({
-                    message: `User: ${req.body.userId} cancelled his like on message:${req.params.id}`,
-                  });
+                res.status(200).json({
+                  message: `User: ${req.body.userId} cancelled his like on message:${req.params.id}`,
+                });
               })
               .catch((error) => {
                 res.status(400).json({ error: error });
@@ -151,16 +160,17 @@ exports.likeMessage = (req, res, next) => {
           } else if (
             arrayLike.usersDisliked.find((userId) => userId === req.body.userId)
           ) {
-            Message.update({
-              $inc: { dislikes: -1 },
-              $pull: { usersDisliked: req.body.userId },
-            }, {where:{ id: id }})
+            Message.update(
+              {
+                $inc: { dislikes: -1 },
+                $pull: { usersDisliked: req.body.userId },
+              },
+              { where: { id: id } }
+            )
               .then(() => {
-                res
-                  .status(200)
-                  .json({
-                    message: `User: ${req.body.userId} cancelled his like on message:${req.params.id}`,
-                  });
+                res.status(200).json({
+                  message: `User: ${req.body.userId} cancelled his like on message:${req.params.id}`,
+                });
               })
               .catch((error) => {
                 res.status(400).json({ error: error });

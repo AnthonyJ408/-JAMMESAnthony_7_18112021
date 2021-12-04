@@ -30,7 +30,7 @@
                   <v-text-field
                     v-model="user.email"
                     :rules="emailRules"
-                    class="form-control rounded-0 "
+                    class="form-control rounded-0"
                     label="Entrez votre email"
                     name="email"
                     prepend-inner-icon="mdi-email"
@@ -42,7 +42,7 @@
                     v-model="user.password"
                     :rules="passwordRules"
                     :counter="20"
-                    class="form-control rounded-0 "
+                    class="form-control rounded-0"
                     label="Entrez votre mot de passe"
                     name="password"
                     prepend-inner-icon="mdi-lock"
@@ -59,17 +59,10 @@
                   >
                     Se connecter</v-btn
                   >
-                  <v-progress-circular
-                    v-show="loading"
-                    indeterminate
-                    color="primary"
-                  >
-                  </v-progress-circular>
                   <v-card-actions class="text--secondary">
                     <v-spacer></v-spacer>
                     Pas de compte?
                     <a
-                      @
                       @click="
                         triggerTransition(
                           'login',
@@ -141,16 +134,11 @@
                     outlined
                   >
                   </v-text-field>
-                  <v-progress-circular
-                    v-show="loading"
-                    indeterminate
-                    color="primary"
-                  ></v-progress-circular>
                   <v-btn
                     class="rounded-0 primary"
                     x-large
                     block
-                    :disabled="!valid || loading"
+                    :disabled="!valid"
                     @click="handleRegister"
                   >
                     S'inscrire</v-btn
@@ -182,109 +170,93 @@
 </template>
 
 <script>
-import User from '../models/user'
+import User from "../models/user";
 export default {
-  name: 'SignIn',
-  data () {
+  name: "SignIn",
+  data() {
     return {
-      user: new User('', '', '', '', ''),
+      user: new User("", "", "", "", ""),
       submitted: false,
       successful: false,
-      mode: 'login',
-      message: '',
-      loading: false,
+      mode: "login",
+      message: "",
       valid: true,
       firstNameRules: [
-        (v) => !!v || 'Prénom requis',
-        (v) => (v && v.length <= 15) || 'Doit contenir maximum 15 caractères'
+        (v) => !!v || "Prénom requis",
+        (v) => (v && v.length <= 15) || "Doit contenir maximum 15 caractères",
       ],
       lastNameRules: [
-        (v) => !!v || 'Nom requis',
-        (v) => (v && v.length <= 15) || 'Doit contenir maximum 15 caractères'
+        (v) => !!v || "Nom requis",
+        (v) => (v && v.length <= 15) || "Doit contenir maximum 15 caractères",
       ],
       emailRules: [
-        (v) => !!v || 'E-mail requis',
-        (v) => /.+@.+\..+/.test(v) || 'E-mail non valide'
+        (v) => !!v || "E-mail requis",
+        (v) => /.+@.+\..+/.test(v) || "E-mail non valide",
       ],
       passwordRules: [
-        (v) => !!v || 'Mot de passe requis',
+        (v) => !!v || "Mot de passe requis",
         (v) =>
           /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/.test(
             v
           ) ||
-          'Le mot de passe doit contenir au moins 8 caractères un nombre, une majuscule, une minuscule et un caractère spécial '
-      ]
-    }
+          "Le mot de passe doit contenir au moins 8 caractères un nombre, une majuscule, une minuscule et un caractère spécial ",
+      ],
+    };
   },
-  computed: {
-    loggedIn () {
-      return this.$store.state.auth.status.loggedIn
-    }
-  },
-  created () {
+  mounted() {
     if (this.loggedIn) {
-      this.$router.push('/UserHome')
+      this.$router.push("/UserHome");
     }
   },
   methods: {
-    handleLogin () {
-      this.loading = true
-      this.$refs.form.validate()
+    handleLogin() {
+      this.$refs.form.validate();
       if (this.$refs.form.validate()) {
-        this.loading = false
-        this.$store.dispatch('auth/login', this.user).then(
+        this.$store.dispatch("auth/login", this.user).then(
           () => {
-            this.$router.push('/UserHome')
-            this.$refs.form.reset()
+            this.$router.push("/UserHome");
+            this.$refs.form.reset();
           },
           (error) => {
-            console.log(error)
-            this.loading = false
-            this.message = error.response.data.error
+            console.log(error);
+            this.message = error.response.data;
           }
-        )
+        );
       }
     },
-    handleRegister () {
-      this.user.fullName = this.user.lastName + ' ' + this.user.firstName
-      this.message = ''
-      this.submitted = true
-      this.$refs.form.validate()
+    handleRegister() {
+      this.user.fullName = this.user.lastName + " " + this.user.firstName;
+      this.message = "";
+      this.submitted = true;
+      this.$refs.form.validate();
       if (this.$refs.form.validate()) {
-        this.$store.dispatch('auth/register', this.user).then(
+        this.$store.dispatch("auth/register", this.user).then(
           (data) => {
-            console.log(data)
-            this.message = data.message
-            this.successful = true
-            this.$refs.form.reset()
-            this.mode = 'login'
+            console.log(data);
+            this.message = data.message;
+            this.successful = true;
+            this.$refs.form.reset();
+            this.mode = "login";
           },
           (error) => {
-            console.log(error)
+            console.log(error);
             this.message =
               error.response.data.error !== undefined
                 ? error.response.data.error.errors[0].message
-                : error.response.data.errors[0].msg
+                : error.response.data.errors[0].msg;
 
-            this.successful = false
+            this.successful = false;
           }
-        )
+        );
       }
     },
-    triggerTransition (object, animation, mode) {
-      const element = document.querySelector(`.${object}`)
-      element.classList.add(`${animation}`)
+    triggerTransition(object, animation, mode) {
+      const element = document.querySelector(`.${object}`);
+      element.classList.add(`${animation}`);
       setTimeout(() => {
-        this.mode = mode
-      }, 1000)
-    }
-
-    // switchToCreateAccount () {
-    //   this.mode = 'create'
-    // },
-    // switchToLogin () {
-    //   this.mode = 'login'
-    // }
-  }
-}
+        this.mode = mode;
+      }, 1000);
+    },
+  },
+};
 </script>

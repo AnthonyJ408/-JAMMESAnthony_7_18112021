@@ -1,9 +1,17 @@
 module.exports = (sequelize, Sequelize) => {
-  sequelize.define('Message',{
+  const Message = sequelize.define('message', {
     message: {
-      type: Sequelize.TEXT
+      type: Sequelize.TEXT,
+      allowNull: false,
     },
-    fileUrl:{
-      type: Sequelize.STRING(50)
-    }
-  })}
+    author: {
+      type: Sequelize.STRING(50),
+      allowNull: false,
+    },
+
+    fileUrl: {
+      type: Sequelize.STRING(250),
+    },
+  });
+  return Message;
+};

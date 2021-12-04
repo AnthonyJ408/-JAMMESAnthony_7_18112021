@@ -1,60 +1,100 @@
 //Récupération du modèle User de sequelize
-const db = require("../models");
+const db = require('../models');
 const User = db.users;
+const config = require('../config/authConfig');
 const Op = db.Sequelize.Op;
+const Role = db.roles;
 //Création de token pour sécuriser le systéme d'authentification du site
-const jwt = require("jsonwebtoken");
+const jwt = require('jsonwebtoken');
 //Package de cryptage pour les mots de passe
-const bcrypt = require("bcrypt");
+const bcrypt = require('bcrypt');
 
 exports.signup = (req, res, next) => {
-  bcrypt
-    //Méthode hash de bcrypt qui va éxécuter 9 "salt" ou "round" de l'algorithme sur le mot de passe pour le crypté
-    .hash(req.body.password, 9)
-    .then((hash) => {
-      const user = {
-        email: req.body.email,
-        password: hash,
-        fullName:req.body.fullName
-      };
-      //Enregistrement du nouvel utilisateur dans la base de donnée avec son email et un mot de passe crypté
-      User
-        .create(user)
-        .then(() => res.status(201).json({ message: "Utilisateur créé!" }))
-        .catch((error) => res.status(400).json({ error }));
+  //Enregistrement du nouvel utilisateur dans la base de donnée avec son email et un mot de passe crypté
+  try {
+    User.create({
+      fullName: req.body.fullName,
+      email: req.body.email,
+      //Méthode hash de bcrypt qui va éxécuter 9 "salt" ou "round" de l'algorithme sur le mot de passe pour le crypté
+      password: bcrypt.hashSync(req.body.password, 8),
     })
-    .catch((error) => res.status(500).json({ error }));
-};
-exports.login = (req, res, next) => {
-  //Récupérer l'utilisateur dans la base de donnée via son adresse mail qui est dans la requête
-  const email = req.body.email;
-  var condition = email? { email: { [Op.like]: `%${email}%` } } : null;
-  console.log(condition)
-  User.findOne({ where: condition })
-  .then((user) => {
-    if (!user) {
-      return res.status(401).json({ error: "Utilisateur introuvable!" });
-    }
-    //Méthode compare de bcrypt qui va comparer le hash entrant et le hash de la base de donnée
-    bcrypt
-      .compare(req.body.password, user.password)
-      .then((valid) => {
-        if (!valid) {
-          return res.status(401).json({ error: "Mot de passe incorect!" });
+      .then((user) => {
+        if (req.body.roles != undefined && req.body.roles[1] == config.admin) {
+          Role.findAll({
+            where: {
+              id: {
+                2: req.body.roles[0],
+              },
+            },
+          })
+            .catch((err) => {
+              console.log(err);
+            })
+            .then(() => {
+              //s'il y a un role de renseigné dans la requête l'ajoute au propriété de l'utilisateur dans mySql
+              user.setRole(2).then(() => {
+                res.send({ message: 'Admin créé!' });
+              });
+            });
+        } else {
+          // sinon définit le rôle "user" par défault
+          user.setRole(1).then(() => {
+            res.send({ message: 'Utilisateur enregistré!' });
+          });
         }
-        //UserId encodé pour gérer les utilisateurs, pour pouvoir reconnaître quel utilisateur a créé quel produit
-        res.status(200).json({
-          fullName: user.fullName,
-          userId: user.id,
-          token: jwt.sign({ userId: user.id }, "MEGASECRETkey25054426165", {
-            expiresIn: "24h",
-          }),
-        });
       })
-      .catch((error) => res.status(501).json({ error }));
-  })
-  .catch((error) => res.status(500).json({ error }));
+      .catch((err) => {
+        res.status(500).send({ message: err.message });
+      });
+  } catch (error) {
+    console.log(error);
+  }
 };
 
-    
+exports.login = (req, res, next) => {
+  User.findOne({
+    where: {
+      email: req.body.email,
+    },
+  })
+    .then((user) => {
+      if (!user) {
+        return res.status(404).send({ message: 'Utilisateur inconnu!' });
+      }
 
+      const passwordIsValid = bcrypt.compareSync(
+        req.body.password,
+        user.password
+      );
+
+      if (!passwordIsValid) {
+        return res.status(401).send({
+          accessToken: null,
+          message: 'Mot de passe incorrect!',
+        });
+      }
+
+      const token = jwt.sign({ id: user.id }, config.secret, {
+        expiresIn: 86400, // 24 hours
+      });
+
+      const authorities = [];
+      user
+        .getRole()
+
+        .then((roles) => {
+          authorities.push('ROLE_' + roles.name.toUpperCase());
+
+          res.status(200).send({
+            id: user.id,
+            fullName: user.fullName,
+            email: user.email,
+            roles: authorities,
+            accessToken: token,
+          });
+        });
+    })
+    .catch((err) => {
+      res.status(500).send({ message: err.message });
+    });
+};

@@ -2,35 +2,37 @@ const express = require("express");
 const router = express.Router();
 //Express Validator va vérifier les données contenu dans le champ "body"
 const { body } = require("express-validator");
-const auth = require("../middleware/auth");
+const { roleJwt } = require("../middleware");
 const valid = require("../middleware/validator");
 const multer = require("../middleware/multer-config");
 const messageCtrl = require("../controllers/message");
 //CRUD Messages avec vérifications des saisies via Express-validator
 //Chaques routes est contrôllées avec Auth pour vérifier si l'utilisateur a les droits avant d'être exécutées
-router.get("/messages", auth, messageCtrl.getAllMessage);
+router.get("/", messageCtrl.getAllMessage);
 router.post(
   "/",
   body("message")
-    .isLength({ max: 50 })
-    .withMessage("must be a maximum of 50 chars long"),
+    .isLength({ max: 2000 })
+    .withMessage("Maximum 2000 caractères!"),
   valid,
-  auth,
   multer,
   messageCtrl.createMessage
 );
-router.get("/:id", auth, messageCtrl.getOneMessage);
+router.get("/:id", messageCtrl.getOneMessage);
 router.put(
   "/:id",
   body("message")
-    .isLength({ max: 50 })
-    .withMessage("must be a maximum of 50 chars long"),
+    .isLength({ max: 2000 })
+    .withMessage("Maximum 2000 caractères!"),
   valid,
-  auth,
   multer,
   messageCtrl.modifyMessage
 );
-router.delete("/:id", auth, messageCtrl.deleteMessage);
+router.delete(
+  "/:id",
+  [roleJwt.verifyToken, roleJwt.isAdmin],
+  messageCtrl.deleteMessage
+);
 router.post(
   "/:id/like",
   body("userId")
@@ -41,7 +43,6 @@ router.post(
     .isLength({ max: 2 })
     .withMessage("must be a maximum of 2 chars long"),
   valid,
-  auth,
   messageCtrl.likeMessage
 );
 //Exports des routes messages
