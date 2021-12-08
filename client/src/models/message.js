@@ -1,7 +1,7 @@
 export default class Message {
-  constructor(message, fileUrl, author) {
+  constructor(message, file, author) {
     this.author = author;
     this.message = message;
-    this.fileUrl = fileUrl;
+    this.file = file;
   }
 }

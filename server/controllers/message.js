@@ -2,28 +2,36 @@
 const db = require('../models');
 const Message = db.messages;
 const Op = db.Sequelize.Op;
+const sequelize = require('sequelize');
 //Package node qui permet d'accéder au dossier du système
 const fs = require('fs');
-const { messages } = require('../models');
 
 exports.createMessage = (req, res, next) => {
   const messageRequest = req.body;
-  if (req.body.filename != undefined) {
+  if (req.file != undefined) {
     const messageFile = {
       //L'opérateur spread ... est utilisé pour faire une copie de tous les éléments de req.body
       ...messageRequest,
       //Récupération de l'image de façon dynamique dans le dossier images
-      imageUrl: `${req.protocol}://${req.get('host')}/images/${
+      fileUrl: `${req.protocol}://${req.get('host')}/images/${
         req.file.filename
       }`,
     };
     //Méthode "create" utilisée pour envoyer les données enregistrés
-    Message.create(...messageFile)
-      .then(() => res.status(201).json({ message: 'registered message !' }))
+    Message.create(messageFile)
+      .then(() => {
+        res.status(201).send({
+          message: 'Message enregistré !',
+        });
+      })
       .catch((error) => res.status(400).json({ error }));
   } else {
     Message.create(messageRequest)
-      .then(() => res.status(201).json({ message: 'registered message !' }))
+      .then(() => {
+        res.status(201).send({
+          message: 'Message enregistré !',
+        });
+      })
       .catch((error) => res.status(400).json({ error }));
   }
 };
@@ -60,126 +68,33 @@ exports.modifyMessage = (req, res, next) => {
     .then(() => res.status(200).json({ message: 'Message modified!' }))
     .catch((error) => res.status(400).json({ error }));
 };
-
-exports.deleteMessage = (req, res, next) => {
-  const id = req.params.id;
+exports.deleteMessage = async (req, res, next) => {
   //on retrouve l'objet avec l'id contenu dans les paramétres de route
-  Message.findByPk({ id: id })
-    .then((message) => {
-      const filename = message.imageUrl.split('/images/')[1];
-      //Supprime l'image avec la fonction unlink de fs
-      fs.unlink(`images/${filename}`, () => {
-        //Méthode .deleteOne qui va supprimer un objet avec l'id renseigné dans les paramétres
-        Message.destroy({ where: { id: id } })
-          .then(() => res.status(200).json({ message: 'Message deleted !' }))
-          .catch((error) => res.status(400).json({ error }));
-      });
-    })
-    .catch((error) => res.status(500).json({ error }));
+
+  const message = await Message.findByPk(req.params.id);
+  console.log(message);
+  if (message.dataValues.fileUrl) {
+    const filename = message.fileUrl.split('/images/')[1];
+    //Supprime l'image avec la fonction unlink de fs
+    fs.unlink(`images/${filename}`, () => {
+      //Méthode .destroy qui va supprimer un objet avec l'id renseigné dans les paramétres
+      Message.destroy({ where: { id: message.id } });
+      res.status(200).json({ message: 'Message supprimé!' });
+    });
+  } else {
+    Message.destroy({ where: { id: message.id } });
+    res.status(200).json({ message: 'Message supprimé!' });
+  }
 };
 
 exports.getAllMessage = (req, res, next) => {
-  console.log(Message);
   //Méthode .find qui va retourner toute la colection messages stockée dans MongoDB
   Message.findAll({ limit: 50, order: [['updatedAt', 'DESC']] })
     .then((messages) => {
       res.status(200).json(messages);
     })
     .catch((error) => {
-      res.status(400).json({
-        error: error,
-      });
+      console.log(error);
+      res.status(400).json({ error });
     });
-};
-exports.likeMessage = (req, res, next) => {
-  const id = req.params.id;
-  switch (req.body.like) {
-    // 3 cas possibles dans l'objet like de la requête :(1,-1 ou 0)
-    case 1:
-      //Avec la valeur 1 on ajoute +1 dans le tableau des "likes", et on ajoute l'id
-      //de l'utilisateur au tableau "usersLiked" avec les opérateurs MongoDB "$inc,$push"
-      Message.update(
-        {
-          $inc: { likes: 1 },
-          $push: { usersLiked: req.body.userId },
-        },
-        { where: { id: id } }
-      )
-        .then(() => {
-          res.status(200).json({
-            message: `User: ${req.body.userId} liked message:${req.params.id}`,
-          });
-        })
-        .catch((error) => {
-          res.status(400).json({ error: error });
-        });
-      break;
-    case -1:
-      //Avec la valeur -1 on ajoute +1 dans le tableau des "dislikes", et on ajoute l'id
-      // de l'utilisateur au tableau "usersdisliked" avec les opérateurs MongoDB "$inc,$push"
-      Message.update(
-        {
-          $inc: { dislikes: 1 },
-          $push: { usersLiked: req.body.userId },
-        },
-        { where: { id: id } }
-      )
-        .then(() => {
-          res.status(200).json({
-            message: `User: ${req.body.userId} disliked message:${req.params.id}`,
-          });
-        })
-        .catch((error) => {
-          res.status(400).json({ error: error });
-        });
-      break;
-    case 0:
-      //Avec la valeur 0 on annule en ajoutant -1 dans le tableau correspondant  et on enléve l'id
-      // de l'utilisateur du tableau correspondant avec les opérateurs MongoDB "$inc,$pull"
-      Message.findByPk(id)
-        .then((arrayLike) => {
-          //On cherche une correspondance de l'utilisateur dans un des deux tableau usersliked ou usersdisliked
-          if (
-            arrayLike.usersLiked.find((userId) => userId === req.body.userId)
-          ) {
-            Message.update(
-              {
-                $inc: { likes: -1 },
-                $pull: { usersLiked: req.body.userId },
-              },
-              { where: { id: id } }
-            )
-              .then(() => {
-                res.status(200).json({
-                  message: `User: ${req.body.userId} cancelled his like on message:${req.params.id}`,
-                });
-              })
-              .catch((error) => {
-                res.status(400).json({ error: error });
-              });
-          } else if (
-            arrayLike.usersDisliked.find((userId) => userId === req.body.userId)
-          ) {
-            Message.update(
-              {
-                $inc: { dislikes: -1 },
-                $pull: { usersDisliked: req.body.userId },
-              },
-              { where: { id: id } }
-            )
-              .then(() => {
-                res.status(200).json({
-                  message: `User: ${req.body.userId} cancelled his like on message:${req.params.id}`,
-                });
-              })
-              .catch((error) => {
-                res.status(400).json({ error: error });
-              });
-          }
-        })
-        .catch((error) => {
-          res.status(404).json({ error: error });
-        });
-      break;
-  }
 };

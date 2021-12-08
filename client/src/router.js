@@ -29,6 +29,7 @@ export const router = new Router({
     },
     {
       path: '/MessageId/:id',
+      name: 'MessageId',
       component: MessageId,
     },
     {

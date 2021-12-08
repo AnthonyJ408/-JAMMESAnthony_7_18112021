@@ -1,21 +1,20 @@
-const db = require("../models");
+const db = require('../models');
 const User = db.users;
-const jwt = require("jsonwebtoken");
-const config =require("../config/authConfig")
+const jwt = require('jsonwebtoken');
+const config = require('../config/authConfig');
 
 verifyToken = (req, res, next) => {
-  let token = req.headers["x-access-token"];
-
+  let token = req.headers['x-access-token'];
   if (!token) {
     return res.status(403).send({
-      message: "Pas de token transmis!!"
+      message: 'Pas de token transmis!!',
     });
   }
 
   jwt.verify(token, config.secret, (err, decoded) => {
     if (err) {
       return res.status(401).send({
-        message: "Non authorisé!"
+        message: 'Non authorisé!',
       });
     }
     req.userId = decoded.id;
@@ -24,14 +23,29 @@ verifyToken = (req, res, next) => {
 };
 
 isAdmin = (req, res, next) => {
-  User.findByPk(req.userId).then(user => {
-    user.getRole().then(roles => {
-        if (roles[i].name === "admin") {
-          next();
-          return;
-        }
+  let token = req.headers['x-access-token'];
+  if (!token) {
+    return res.status(403).send({
+      message: 'Pas de token transmis!!',
+    });
+  }
+
+  jwt.verify(token, config.secret, (err, decoded) => {
+    if (err) {
+      return res.status(401).send({
+        message: 'Non authorisé!',
+      });
+    }
+    req.userId = decoded.id;
+  });
+  User.findByPk(req.userId).then((user) => {
+    user.getRole().then((roles) => {
+      if (roles.name === 'admin') {
+        next();
+        return;
+      }
       res.status(403).send({
-        message: "Rôle admin requis!"
+        message: 'Rôle admin requis!',
       });
       return;
     });
@@ -40,6 +54,6 @@ isAdmin = (req, res, next) => {
 
 const roleJwt = {
   verifyToken: verifyToken,
-  isAdmin: isAdmin
+  isAdmin: isAdmin,
 };
 module.exports = roleJwt;

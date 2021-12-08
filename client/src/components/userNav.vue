@@ -1,8 +1,8 @@
 
   <template>
-  <v-card class="overflow-hidden">
+  <v-card style="box-shadow: none" class="overflow-hidden">
     <v-app-bar
-      class="animate__animated animate__fadeIn"
+      class="animate__animated animate__fadeInDown"
       light
       fixed
       src="../assets/icon.png"
@@ -13,28 +13,27 @@
 
       <template v-slot:extension>
         <v-tabs align-with-title>
-          <v-tab class="primary-bg" link to="/userHome" rounded>
+          <v-tab class="primary-bg" link to="/userHome">
             <v-icon>mdi-home</v-icon>
           </v-tab>
-          <v-tab class="primary-bg" link to="/userProfile"
+          <v-tab class="primary-bg" link to="/UserProfile"
             ><v-icon>mdi-account</v-icon></v-tab
           >
-          <v-tab class="primary-bg" link to="/Favorites"
-            ><v-icon>mdi-star</v-icon></v-tab
+          <v-tab class="primary-bg" link to="/userPost"
+            ><v-icon>mdi-pen</v-icon></v-tab
           >
-          <v-tab class="primary-bg" link><v-icon>mdi-magnify</v-icon></v-tab>
         </v-tabs>
       </template>
     </v-app-bar>
-    <v-sheet class="overflow-y-auto" max-height="100">
-      <v-container style="height: 1000px"></v-container>
-    </v-sheet>
+
+    <v-container style="height: 150px"></v-container>
   </v-card>
 </template>
 
 <script>
 export default {
   name: "userNav",
+
   data() {
     return {
       drawer: null,
@@ -62,9 +61,5 @@ export default {
 .primary-bg:hover {
   background: #fd2d01 !important;
   -webkit-text-fill-color: rgb(255, 255, 255);
-}
-#sheet {
-  box-shadow: none;
-  height: 120px;
 }
 </style>
