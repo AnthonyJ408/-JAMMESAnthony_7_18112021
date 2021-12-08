@@ -33,15 +33,7 @@ router.post(
   valid,
   userCtrl.login
 );
-router.get(
-  '/users',
-  [roleJwt.verifyToken || roleJwt.isAdmin],
-  userCtrl.getAllUsers
-);
-router.delete(
-  'users/:id',
-  [roleJwt.verifyToken || roleJwt.isAdmin],
-  userCtrl.deleteUser
-);
+router.get('/users', [roleJwt.verifyToken], userCtrl.getAllUsers);
+router.delete('/users/:id', [roleJwt.verifyToken], userCtrl.deleteUser);
 //Exports des routes users
 module.exports = router;

@@ -22,13 +22,12 @@ export const user = {
           console.log(err);
         });
     },
-    async deleteUser({ commit, dispatch }, id) {
+    async deleteUser({ commit }, id) {
       return userRequest
         .deleteUser(id)
         .then((response) => {
           console.log(response);
           commit('deletedUser', response.data);
-          dispatch('onLogout');
         })
         .catch((err) => {
           console.log(err);

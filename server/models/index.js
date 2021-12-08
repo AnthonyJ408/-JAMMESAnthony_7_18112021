@@ -58,7 +58,7 @@ db.sequelize.sync();
 //     .create({
 //       email: 'groupomaniaAdmin@gmail.com',
 //       password: bcrypt.hashSync('Groupomania7!', 8),
-//       fullName: 'Roger Grooupo',
+//       fullName: 'Admin Groupomania',
 //     })
 //     .then((user) => {
 //       user.setRole(2).catch((res) => {
@@ -74,7 +74,7 @@ db.sequelize.sync();
 //     .create({
 //       email: 'groupoaniaAdmin2@gmail.com',
 //       password: bcrypt.hashSync('Groupomania7!', 8),
-//       fullName: 'Valérie Grooupo',
+//       fullName: 'User Groupomania',
 //     })
 //     .then((user) => {
 //       user.setRole(1).catch((res) => {

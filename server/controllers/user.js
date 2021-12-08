@@ -27,8 +27,8 @@ exports.signup = (req, res, next) => {
               },
             },
           })
-            .catch((err) => {
-              console.log(err);
+            .catch((error) => {
+              console.log(error);
             })
             .then(() => {
               //s'il y a un role de renseigné dans la requête l'ajoute au propriété de l'utilisateur dans mySql
@@ -43,8 +43,8 @@ exports.signup = (req, res, next) => {
           });
         }
       })
-      .catch((err) => {
-        res.status(500).send({ message: err.message });
+      .catch((error) => {
+        res.status(500).send({ message: error.message });
       });
   } catch (error) {
     console.log(error);
@@ -59,7 +59,7 @@ exports.login = (req, res, next) => {
   })
     .then((user) => {
       if (!user) {
-        return res.status(404).send({ message: 'Utilisateur inconnu!' });
+        return res.status(404).send({ error: 'Utilisateur inconnu!' });
       }
 
       const passwordIsValid = bcrypt.compareSync(
@@ -94,8 +94,8 @@ exports.login = (req, res, next) => {
           });
         });
     })
-    .catch((err) => {
-      res.status(500).send({ message: err.message });
+    .catch((error) => {
+      res.status(500).send({ error });
     });
 };
 exports.getAllUsers = async (req, res) => {
@@ -109,12 +109,13 @@ exports.getAllUsers = async (req, res) => {
     });
 };
 exports.deleteUser = async (req, res) => {
-  User.findByPk({ where: { id: req.params.id } })
-    .then((res) => {
-      res.status(200).json({ message: 'User deleted successfully!' });
+  await User.findByPk(req.params.id)
+    .then((user) => {
+      User.destroy({ where: { id: user.id } }).then(() => {
+        res.status(200).send({ message: 'Utilisateur supprimé!' });
+      });
     })
-    .catch((err) => {
-      console.log(err);
+    .catch((error) => {
       res.status(404).json({ error });
     });
 };

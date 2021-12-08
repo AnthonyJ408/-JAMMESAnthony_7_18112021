@@ -26,19 +26,14 @@ export const message = {
         });
     },
     async addPost({ commit }, fd) {
-      return await userRequest
-        .postMessage(fd)
-
-        .then((response) => {
-          commit('addStatus', true);
-          commit('postMessage', response.data);
-
-          return Promise.resolve(response);
-        })
-        .catch((err) => {
-          console.log(err);
-          commit('addStatus', false);
-        });
+      try {
+        const response = userRequest.postMessage(fd);
+        commit('addStatus', true);
+        commit('postMessage', response.data);
+      } catch (err) {
+        console.log(err);
+        return commit('addStatus', false);
+      }
     },
     async deletePost({ commit }, id) {
       return userRequest
@@ -51,18 +46,16 @@ export const message = {
           commit('addStatus', false);
         });
     },
-    async updatePost({ commit }, formData) {
-      return userRequest
-        .updateMessage(formData)
-        .then((response) => {
-          commit('updateMessage', response.data);
-          commit('putStatus', true);
-          return Promise.resolve(response);
-        })
-        .catch((err) => {
-          console.log(err);
-          commit('putStatus', false);
-        });
+    async updatePost({ commit }, fd) {
+      try {
+        const response = userRequest.updateMessage(fd);
+
+        commit('updateMessage', response.data);
+        commit('putStatus', true);
+      } catch (err) {
+        console.log(err);
+        commit('putStatus', false);
+      }
     },
   },
 

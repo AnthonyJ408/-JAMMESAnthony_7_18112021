@@ -2,7 +2,7 @@
   <v-app>
     <userNav> </userNav>
     <v-main>
-      <v-container>
+      <v-container v-if="!modify">
         <v-card id="alone" class="ma-5 animate__animated animate__slow">
           <v-card-title>{{ post.author }}</v-card-title>
           <v-card-text>{{ post.description }}</v-card-text>
@@ -21,12 +21,8 @@
             }}</v-card-subtitle
           >
           <v-card-actions>
-            <router-link
-              style="text-decoration: none"
-              :to="{ name: 'ModifyPost', params: { postId } }"
-            >
-              <v-btn class="ma-2 warning">Modifier</v-btn>
-            </router-link>
+            <v-btn @click="modifyWanted()" class="ma-2 warning">Modifier</v-btn>
+
             <v-btn @click="ondelete()" class="ma-2 error">Supprimer</v-btn>
           </v-card-actions>
         </v-card>
@@ -39,16 +35,67 @@
           >{{ message }}</v-alert
         >
       </v-container>
+      <v-container v-else>
+        <v-card class="mx-auto ma-3">
+          <h1 class="d-flex pa-5">Modifier un message:</h1>
+          <v-form ref="form">
+            <v-text-field
+              v-model="newMessage.title"
+              class="d-flex pa-5 animate__rubberBand animate__animated"
+              solo
+              auto-grow
+              clearable
+              label="Entrer un titre"
+            ></v-text-field>
+
+            <v-text-field
+              v-model="newMessage.description"
+              class="d-flex pa-5 animate__rubberBand animate__animated"
+              solo
+              auto-grow
+              placeholder="Écrire un message..."
+              clearable
+            ></v-text-field>
+            <v-file-input
+              v-model="newMessage.image"
+              name="image"
+              @change="onFileSelected"
+              class="d-flex pa-5 animate__rubberBand animate__animated"
+              accept="jpeg/png/jpg/gif"
+              ref="file"
+              label="File input"
+            ></v-file-input>
+            <div class="d-flex justify-center">
+              <v-btn @click="onUpdate" class="ma-4 warning">Modifier</v-btn>
+              <v-btn @click="modify = false" class="ma-4 error">Retour</v-btn>
+            </div>
+          </v-form>
+
+          <v-container
+            ><v-alert
+              dismissible
+              dense
+              text
+              v-if="message"
+              :type="successful ? 'success' : 'error'"
+              >{{ message }}</v-alert
+            ></v-container
+          >
+        </v-card>
+      </v-container>
     </v-main>
   </v-app>
 </template>
 <script>
 import { mapActions, mapGetters } from "vuex";
 import userNav from "../components/userNav.vue";
+import Message from "../models/message";
 export default {
   components: { userNav },
   data() {
     return {
+      modify: "",
+      newMessage: new Message("", "", "", ""),
       successful: "",
       message: "",
       postId: this.$route.params.id,
@@ -73,13 +120,41 @@ export default {
       await this.deletePost(this.postId)
         .then(() => {
           this.successful = true;
-          this.message = "Message Supprimé";
+          this.message = "Message supprimé!";
           this.$router.push("/UserHome");
+          this.$refs.form.reset();
         })
         .catch(() => {
           this.successful = false;
           this.message = "Erreur!";
         });
+    },
+    onFileSelected(event) {
+      this.newMessage.image = event;
+    },
+
+    modifyWanted() {
+      return (this.modify = true);
+    },
+    onUpdate(e) {
+      e.preventDefault();
+      try {
+        const formData = new FormData();
+        formData.set("id", this.post.id);
+        formData.append("file", this.newMessage.image);
+        formData.set("title", this.newMessage.title);
+        formData.set("description", this.newMessage.description);
+        console.log(formData);
+        this.$store.dispatch("updatePost", formData).then(() => {
+          this.successful = true;
+          this.message = "Message modifié";
+          this.$router.push("/UserHome");
+          this.$refs.form.reset();
+        });
+      } catch (err) {
+        this.successful = false;
+        this.message = "Erreur!";
+      }
     },
   },
 };
@@ -88,6 +163,6 @@ export default {
 #alone {
   color: black !important;
   text-decoration: none !important;
-  background: linear-gradient(127deg, #ffd7d7, rgba(255, 255, 255, 0) 70.71%);
+  background: url("../assets/icon.png") no-repeat center;
 }
 </style>

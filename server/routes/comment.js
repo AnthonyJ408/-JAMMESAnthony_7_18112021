@@ -3,15 +3,7 @@ const router = express.Router();
 const commentCtrl = require('../controllers/comment');
 const { roleJwt } = require('../middleware');
 
-router.get(
-  '/',
-  [roleJwt.verifyToken || roleJwt.isAdmin],
-  commentCtrl.getAllComments
-);
-router.post(
-  '/',
-  [roleJwt.verifyToken || roleJwt.isAdmin],
-  commentCtrl.createComment
-);
+router.get('/', [roleJwt.verifyToken], commentCtrl.getAllComments);
+router.post('/', [roleJwt.verifyToken], commentCtrl.createComment);
 
 module.exports = router;

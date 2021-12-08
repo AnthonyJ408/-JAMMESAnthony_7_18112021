@@ -1,19 +1,20 @@
 <template>
-  <v-app>
+  <v-app style="background: #e3e3e3">
     <v-main>
       <userNav></userNav>
       <v-container>
-        <v-form>
-          <v-row>
-            <v-text-field
-              class="form-control rounded-0"
-              label="Recherche"
-              prepend-inner-icon="mdi-magnify"
-              type="text"
-              outlined
-            ></v-text-field
-          ></v-row>
-        </v-form>
+        <v-container>
+          <v-form>
+            <v-row>
+              <v-text-field
+                class="form-control rounded-0"
+                label="Recherche"
+                prepend-inner-icon="mdi-magnify"
+                type="text"
+                outlined
+              ></v-text-field
+            ></v-row> </v-form
+        ></v-container>
         <v-divider></v-divider>
         <v-container>
           <wallMessage
@@ -72,4 +73,8 @@ export default {
   },
 };
 </script>
-
+<style >
+.v-input__slot {
+  background: white !important;
+}
+</style>

@@ -3,31 +3,18 @@ const router = express.Router();
 const multer = require('../middleware/multer-config');
 const { roleJwt } = require('../middleware');
 const messageCtrl = require('../controllers/message');
-router.get(
-  '/',
-  [roleJwt.verifyToken || roleJwt.isAdmin],
-  messageCtrl.getAllMessage
-);
-router.get(
-  '/:id',
-  [roleJwt.verifyToken || roleJwt.isAdmin],
-  messageCtrl.getOneMessage
-);
+router.get('/', [roleJwt.verifyToken], messageCtrl.getAllMessage);
+router.get('/:id', [roleJwt.verifyToken], messageCtrl.getOneMessage);
 router.put(
   '/:id',
   [roleJwt.verifyToken || roleJwt.isAdmin],
   multer,
   messageCtrl.modifyMessage
 );
-router.post(
-  '/',
-  [roleJwt.verifyToken || roleJwt.isAdmin],
-  multer,
-  messageCtrl.createMessage
-);
+router.post('/', [roleJwt.verifyToken], multer, messageCtrl.createMessage);
 router.delete(
   '/:id',
-  [roleJwt.verifyToken || roleJwt.isAdmin],
+  [roleJwt.isAdmin || roleJwt.verifyToken],
   messageCtrl.deleteMessage
 );
 

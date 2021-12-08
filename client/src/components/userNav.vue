@@ -1,6 +1,6 @@
 
   <template>
-  <v-card style="box-shadow: none" class="overflow-hidden">
+  <v-main style="box-shadow: none" class="overflow-hidden">
     <v-app-bar
       class="animate__animated animate__fadeInDown"
       light
@@ -27,7 +27,7 @@
     </v-app-bar>
 
     <v-container style="height: 150px"></v-container>
-  </v-card>
+  </v-main>
 </template>
 
 <script>

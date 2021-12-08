@@ -19,22 +19,17 @@
             </p>
           </v-card-text>
         </router-link>
-        <div class="footer">
+        <v-card-text>
           <v-form method="post">
             <v-text-field
               v-model="comment"
-              class="rounded-pill"
               type="text"
               required
               placeholder="Écrire un commentaire"
             ></v-text-field
           ></v-form>
-          <v-btn @click="onSendComment">Envoyer</v-btn>
-          <v-btn @click="onShowComments" pill>
-            {{ rightComment }}
-            ></v-btn
-          >
-        </div>
+          <v-btn class="success" @click="onSendComment">Envoyer</v-btn>
+        </v-card-text>
       </v-card></v-container
     >
 
@@ -63,7 +58,6 @@ export default {
   data() {
     return {
       comment: "",
-      show: false,
       showPost: true,
     };
   },
@@ -122,9 +116,6 @@ export default {
         return err;
       }
     },
-    onShowComments() {
-      this.show = !this.show;
-    },
   },
 };
 </script>
@@ -132,6 +123,6 @@ export default {
 #link {
   color: black !important;
   text-decoration: none !important;
-  background: linear-gradient(127deg, #ffd7d7, rgba(255, 255, 255, 0) 70.71%);
+  background: url("../assets/icon.png") center;
 }
 </style>

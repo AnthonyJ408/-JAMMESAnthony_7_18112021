@@ -13,7 +13,7 @@ class UserService {
     return axios.post(API_URL + '/messages', fd, { headers: authHeader() });
   }
   updateMessage(fd) {
-    return axios.post(API_URL + `/messages/${fd.get('id')}`, fd, {
+    return axios.put(API_URL + `/messages/${fd.get('id')}`, fd, {
       headers: authHeader(),
     });
   }
@@ -26,7 +26,7 @@ class UserService {
     return axios.get(API_URL, '/auth/users', { headers: authHeader() });
   }
   deleteUser(id) {
-    return axios.delete(API_URL + 'auth/users/' + id, {
+    return axios.delete(API_URL + `/auth/users/${id}`, {
       headers: authHeader(),
     });
   }
