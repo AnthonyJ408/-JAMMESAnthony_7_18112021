@@ -10,10 +10,11 @@ Etape 2:
 
 Pour que les données de l'application soient stockées il faut se connecter à notre base de données.
 Sur le projet les identifiants ne sont pas fournis mais le code utilise le chemin de mes variables d'environnement 
-je vous conseille donc de créer les mêmes
+je vous conseille donc de créer les mêmes dans le dossier server $cd server
 
 Créer le dossier config
   $ mkdir config
+  $ cd config
  
 Créer le fichier authConfig.js 
 $ touch authConfig.js 
@@ -34,6 +35,10 @@ Créer le fichier config.js
       dialect: 'mysql',
       host: 'localhost',  },
     };
+    
+ Créer également le dossier statique images qui va recevoir les fichiers multimédias des utilisateurs
+    $ cd ..
+    $ mkdir images
     
 Etape 3:
   Il faut initialiser la table "roles" dans mysql
