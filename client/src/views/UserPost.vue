@@ -1,5 +1,5 @@
 <template>
-  <v-app>
+  <v-app style="background: #e3e3e3">
     <v-container>
       <user-nav></user-nav>
       <v-card class="mx-auto ma-3">

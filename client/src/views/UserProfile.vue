@@ -1,5 +1,5 @@
 <template>
-  <v-app>
+  <v-app style="background: #e3e3e3">
     <div class="container">
       <userNav></userNav>
     </div>

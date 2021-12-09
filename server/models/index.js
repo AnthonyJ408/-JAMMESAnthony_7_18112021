@@ -18,20 +18,11 @@ db.messages = require('./message')(sequelize, Sequelize);
 db.roles = require('./role')(sequelize, Sequelize);
 db.comments = require('./comment')(sequelize, Sequelize);
 
-db.messages.hasMany(db.comments, {
+db.users.hasMany(db.messages);
+db.messages.belongsTo(db.users, {
   onDelete: 'CASCADE',
   onUpdate: 'CASCADE',
-  foreignKey: 'messageId',
 });
-db.comments.belongsTo(db.users, {
-  onDelete: 'CASCADE',
-  onUpdate: 'CASCADE',
-  foreignKey: 'commentId',
-});
-db.users.hasMany(db.messages, {
-  foreignKey: 'userMessageId',
-});
-db.messages.belongsTo(db.users);
 db.roles.hasOne(db.users, {
   onDelete: 'CASCADE',
   onUpdate: 'CASCADE',
@@ -91,7 +82,7 @@ db.sequelize.sync();
 //       .create({
 //         email: 'groupomaniaUser2@gmail.com',
 //         password: bcrypt.hashSync('Groupomania7!', 8),
-//         fullName: 'User Groupomania',
+//         fullName: 'UserDeux Groupomania',
 //       })
 //       .then((user) => {
 //         user.setRole(1).catch((res) => {

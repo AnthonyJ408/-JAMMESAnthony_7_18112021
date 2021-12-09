@@ -3,12 +3,6 @@ module.exports = (sequelize, Sequelize) => {
     comment: {
       type: Sequelize.STRING,
     },
-    userId: {
-      type: Sequelize.INTEGER,
-    },
-    postId: {
-      type: Sequelize.INTEGER,
-    },
   });
   return Comment;
 };

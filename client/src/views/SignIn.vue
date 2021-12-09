@@ -217,9 +217,8 @@ export default {
     handleLogin() {
       this.$refs.form.validate();
       if (this.$refs.form.validate()) {
-        this.$store.dispatch("auth/login", this.user).then((res) => {
+        this.$store.dispatch("auth/login", this.user).then(() => {
           this.message = "Utilisateur inconnu!";
-          console.log(res);
         });
       }
     },

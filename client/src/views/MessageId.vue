@@ -1,5 +1,5 @@
 <template>
-  <v-app>
+  <v-app style="background: #e3e3e3">
     <userNav> </userNav>
     <v-main>
       <v-container class="animate__zoomInDown animate__animated" v-if="!modify">
@@ -182,6 +182,6 @@ export default {
 #alone {
   color: black !important;
   text-decoration: none !important;
-  background: url("../assets/icon.png") no-repeat center;
+  background: url("../assets/icon.png") center;
 }
 </style>

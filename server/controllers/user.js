@@ -1,5 +1,6 @@
 const db = require('../models');
 const User = db.users;
+const Message = db.users;
 const config = require('../config/authConfig');
 const Op = db.Sequelize.Op;
 const Role = db.roles;
@@ -110,6 +111,7 @@ exports.getAllUsers = async (req, res) => {
 exports.deleteUser = async (req, res) => {
   await User.findByPk(req.params.id)
     .then((user) => {
+      Message.destroy({ where: { id: user.id } });
       User.destroy({ where: { id: user.id } }).then(() => {
         res.status(200).send({ message: 'Utilisateur supprimé!' });
       });

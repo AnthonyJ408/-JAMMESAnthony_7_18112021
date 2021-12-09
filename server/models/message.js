@@ -1,5 +1,10 @@
 module.exports = (sequelize, Sequelize) => {
   const Message = sequelize.define('messages', {
+    id: {
+      type: Sequelize.INTEGER,
+      autoIncrement: true,
+      primaryKey: true,
+    },
     title: {
       type: Sequelize.STRING(50),
     },
@@ -10,6 +15,7 @@ module.exports = (sequelize, Sequelize) => {
     description: {
       type: Sequelize.TEXT,
     },
+
     fileUrl: {
       type: Sequelize.STRING(250),
     },
@@ -24,5 +30,6 @@ module.exports = (sequelize, Sequelize) => {
       allowNull: false,
     },
   });
+
   return Message;
 };
