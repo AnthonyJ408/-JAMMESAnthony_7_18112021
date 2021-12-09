@@ -4,26 +4,31 @@
     <v-main>
       <v-container v-if="!modify">
         <v-card id="alone" class="ma-5 animate__animated animate__slow">
-          <v-card-title>{{ post.author }}</v-card-title>
-          <v-card-text>{{ post.description }}</v-card-text>
+          <v-card-title>{{ post.title }}</v-card-title>
+
           <v-img
             :src="post.fileUrl"
             alt="Image"
             class="rounded-0"
             style="width: 100%"
-          ></v-img>
-          <v-card-subtitle
-            >Le
-            {{
-              post.createdAt.slice(0, 10).split("-").reverse().join("/") +
-              " à " +
-              post.createdAt.slice(11, 16)
-            }}</v-card-subtitle
+          ></v-img
+          ><v-card-text
+            >{{ post.description }}
+            <p>
+              Par {{ post.author }} le
+              {{
+                post.createdAt.slice(0, 10).split("-").reverse().join("/") +
+                " à " +
+                post.createdAt.slice(11, 16)
+              }}
+            </p></v-card-text
           >
-          <v-card-actions>
+          <v-card-actions v-show="verif">
             <v-btn @click="modifyWanted()" class="ma-2 warning">Modifier</v-btn>
 
-            <v-btn @click="ondelete()" class="ma-2 error">Supprimer</v-btn>
+            <v-btn @click="ondelete(postId, user.id)" class="ma-2 error"
+              >Supprimer</v-btn
+            >
           </v-card-actions>
         </v-card>
         <v-alert
@@ -65,7 +70,7 @@
               ref="file"
               label="File input"
             ></v-file-input>
-            <div class="d-flex justify-center">
+            <div v-show="verif" class="d-flex justify-center">
               <v-btn @click="onUpdate" class="ma-4 warning">Modifier</v-btn>
               <v-btn @click="modify = false" class="ma-4 error">Retour</v-btn>
             </div>
@@ -99,7 +104,16 @@ export default {
       successful: "",
       message: "",
       postId: this.$route.params.id,
+      user: this.$store.state.auth.user,
+      verif: "",
     };
+  },
+  mounted() {
+    if (this.user.fullName == this.post.author) {
+      this.verif = true;
+    } else if (this.user.roles[0] == "ROLE_ADMIN") {
+      this.verif = true;
+    }
   },
   computed: {
     ...mapGetters({
@@ -114,10 +128,15 @@ export default {
       }
     },
   },
+
   methods: {
     ...mapActions({ deletePost: "deletePost" }),
-    async ondelete() {
-      await this.deletePost(this.postId)
+    async ondelete(messageId, userId) {
+      const requestId = {
+        messageId: messageId,
+        userId: userId,
+      };
+      await this.deletePost(requestId)
         .then(() => {
           this.successful = true;
           this.message = "Message supprimé!";
@@ -144,7 +163,7 @@ export default {
         formData.append("file", this.newMessage.image);
         formData.set("title", this.newMessage.title);
         formData.set("description", this.newMessage.description);
-        console.log(formData);
+
         this.$store.dispatch("updatePost", formData).then(() => {
           this.successful = true;
           this.message = "Message modifié";

@@ -128,7 +128,7 @@ export default {
     this.user.firstName = name[0];
     this.user.lastName = name[1];
 
-    return console.log(name);
+    return;
   },
 };
 </script>

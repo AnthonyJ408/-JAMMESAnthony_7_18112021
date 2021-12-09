@@ -17,10 +17,14 @@ class UserService {
       headers: authHeader(),
     });
   }
-  deleteMessage(id) {
-    return axios.delete(API_URL + `/messages/${id}`, {
-      headers: authHeader(),
-    });
+  deleteMessage(messageId, userId) {
+    return axios.post(
+      API_URL + `/messages/${messageId}`,
+      { userId: userId },
+      {
+        headers: authHeader(),
+      }
+    );
   }
   getAllUsers() {
     return axios.get(API_URL, '/auth/users', { headers: authHeader() });

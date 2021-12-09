@@ -72,7 +72,7 @@ db.sequelize.sync();
 // .then(() => {
 //   db.users
 //     .create({
-//       email: 'groupoaniaAdmin2@gmail.com',
+//       email: 'groupomaniaUser@gmail.com',
 //       password: bcrypt.hashSync('Groupomania7!', 8),
 //       fullName: 'User Groupomania',
 //     })
@@ -85,6 +85,23 @@ db.sequelize.sync();
 //       console.log(res);
 //     });
 // })
+// .then(() => {
+//   db.users
+//     .create({
+//       email: 'groupomaniaUser2@gmail.com',
+//       password: bcrypt.hashSync('Groupomania7!', 8),
+//       fullName: 'User Groupomania',
+//     })
+//     .then((user) => {
+//       user.setRole(1).catch((res) => {
+//         console.log(res);
+//       });
+//     })
+//     .catch((res) => {
+//       console.log(res);
+//     });
+// })
+
 // .catch((error) => {
 //   console.log(error);
 // }),

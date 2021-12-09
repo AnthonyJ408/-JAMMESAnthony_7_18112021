@@ -31,20 +31,19 @@ export const message = {
         commit('addStatus', true);
         commit('postMessage', response.data);
       } catch (err) {
-        console.log(err);
         return commit('addStatus', false);
       }
     },
-    async deletePost({ commit }, id) {
-      return userRequest
-        .deleteMessage(id)
-        .then((response) => {
-          commit('deleteMessage', id);
-          return Promise.resolve(response);
-        })
-        .catch(() => {
-          commit('addStatus', false);
-        });
+    deletePost({ commit }, requestId) {
+      const messageId = requestId.messageId;
+      const userId = requestId.userId;
+
+      try {
+        userRequest.deleteMessage(messageId, userId);
+        commit('deleteMessage', requestId);
+      } catch (err) {
+        return commit('addStatus', false);
+      }
     },
     async updatePost({ commit }, fd) {
       try {
@@ -53,7 +52,6 @@ export const message = {
         commit('updateMessage', response.data);
         commit('putStatus', true);
       } catch (err) {
-        console.log(err);
         commit('putStatus', false);
       }
     },

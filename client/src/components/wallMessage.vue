@@ -90,7 +90,6 @@ export default {
     rightComment() {
       try {
         const comments = this.getAllComments.data;
-        console.log(comments);
         return comments.filter((comment) => this.id == comment.postId);
       } catch (err) {
         return err;

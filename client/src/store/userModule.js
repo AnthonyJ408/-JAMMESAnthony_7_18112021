@@ -26,7 +26,6 @@ export const user = {
       return userRequest
         .deleteUser(id)
         .then((response) => {
-          console.log(response);
           commit('deletedUser', response.data);
         })
         .catch((err) => {
