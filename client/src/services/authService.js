@@ -1,6 +1,7 @@
 import axios from 'axios';
 
 const API_URL = 'http://localhost:3000/api/auth/';
+// Requête axios pour l'authentification
 
 class AuthService {
   login(user) {

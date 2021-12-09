@@ -2,7 +2,7 @@
   <v-app>
     <userNav> </userNav>
     <v-main>
-      <v-container v-if="!modify">
+      <v-container class="animate__zoomInDown animate__animated" v-if="!modify">
         <v-card id="alone" class="ma-5 animate__animated animate__slow">
           <v-card-title>{{ post.title }}</v-card-title>
 

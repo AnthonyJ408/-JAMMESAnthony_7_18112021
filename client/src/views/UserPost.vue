@@ -7,7 +7,7 @@
         <v-form ref="form">
           <v-text-field
             v-model="newMessage.title"
-            class="d-flex pa-5 animate__rubberBand animate__animated"
+            class="d-flex pa-5 animate__zoomInDown animate__animated"
             solo
             auto-grow
             clearable
@@ -15,7 +15,7 @@
           ></v-text-field>
 
           <v-textarea
-            class="d-flex pa-5 animate__rubberBand animate__animated"
+            class="d-flex pa-5 animate__zoomInDown animate__animated"
             solo
             auto-grow
             placeholder="Écrire un message..."
@@ -26,7 +26,7 @@
             name="image"
             v-model="newMessage.image"
             @change="onFileSelected"
-            class="d-flex pa-5 animate__rubberBand animate__animated"
+            class="d-flex pa-5 animate__zoomInDown animate__animated"
             accept="jpeg/png/jpg/gif"
             ref="file"
             label="File input"

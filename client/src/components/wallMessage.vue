@@ -24,7 +24,16 @@
               placeholder="Écrire un commentaire"
             ></v-text-field
           ></v-form>
-          <v-btn class="success" @click="onSendComment">Envoyer</v-btn>
+          <v-btn class="success" @click="click = true">Envoyer</v-btn>
+          <v-alert
+            class="ma-6"
+            dismissible
+            shaped
+            text
+            v-if="click"
+            type="warning"
+            >{{ message }}</v-alert
+          >
         </v-card-text>
       </v-card></v-container
     >
@@ -57,6 +66,8 @@ export default {
       comment: "",
       showPost: true,
       formatedDate: "",
+      message: "Non fonctionel!",
+      click: "",
     };
   },
   // Date formatée à la date locale
