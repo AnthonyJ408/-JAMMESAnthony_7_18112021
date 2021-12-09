@@ -4,7 +4,9 @@ Groupomania: Projet 7 Openclassrooms
 Etape 1:
 
 Cloner le projet,
-ensuite lancer $ npm install dans le terminal
+ensuite en étant à la racine du projet  lancer $cd server puis $ npm install.
+Et $cd ../client et  $npm install.
+Assurez vous d'avoir "nodemon" d'installer également.
 
 Etape 2:
 
@@ -42,8 +44,8 @@ Créer le fichier config.js
     
 Etape 3:
   Il faut initialiser la table "roles" dans mysql
-  pour cela j'ai créé une fonction dans server/models/index.js de la ligne 43 à 90
-  qu'il vous suffit de décommenter et de commenter à la place .sync(); ligne 42.
+  pour cela j'ai créé une fonction dans server/models/index.js de la ligne 43 à 107
+  qu'il vous suffit de décommenter et de commenter à la place db.sequelize.sync(); ligne 42.
   Ceci va créer deux utilisateurs avec le rôle admin et user.
   Si vous préférer les créer vous même sacher que la clé dans authConfig est demandé 
   dans la requête pour accepter la création de compte admin
