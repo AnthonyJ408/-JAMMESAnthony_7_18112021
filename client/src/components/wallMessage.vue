@@ -45,6 +45,7 @@
 </template>
 
 <script>
+// Page d'accueil avec affichage des composants wallMessage et wallComment
 import wallComment from "../components/wallComment";
 import { mapActions, mapGetters } from "vuex";
 export default {
@@ -58,36 +59,18 @@ export default {
       formatedDate: "",
     };
   },
+  // Date formatée à la date locale
   mounted() {
     let objDate = new Date(this.createdAt);
     return (this.formatedDate = objDate.toLocaleString("fr-FR"));
   },
+  // Récupére les getters enregistrées dans vueex
   computed: {
     ...mapGetters({
       getAllComments: "getAllComments",
       getAllMessages: "getAllMessages",
       getAllUsers: "getAllUsers",
     }),
-    postId() {
-      try {
-        const posts = this.getAllMessages.data;
-        return posts.find((message) => this.id == message.id).id;
-      } catch (err) {
-        return err;
-      }
-    },
-    user() {
-      try {
-        const users = this.getAllUsers.data;
-        return (
-          users.find((user) => this.id == user.id) || {
-            fullName: "",
-          }
-        );
-      } catch (err) {
-        return err;
-      }
-    },
     rightComment() {
       try {
         const comments = this.getAllComments.data;
@@ -98,26 +81,28 @@ export default {
     },
   },
 
-  methods: {
-    ...mapActions({
-      addComment: "addComment",
-      loadComments: "loadComments",
-    }),
-
-    onSendComment() {
-      try {
-        if (this.comment !== "") {
-          this.addComment({
-            comment: this.comment,
-            postId: this.postId,
-          });
-          this.comment = "";
+  methods:
+    // Récupére les actions enregistrées dans vueex
+    {
+      ...mapActions({
+        addComment: "addComment",
+        loadComments: "loadComments",
+      }),
+      //Commentaires en cours de dev
+      onSendComment() {
+        try {
+          if (this.comment !== "") {
+            this.addComment({
+              comment: this.comment,
+              postId: this.postId,
+            });
+            this.comment = "";
+          }
+        } catch (err) {
+          return err;
         }
-      } catch (err) {
-        return err;
-      }
+      },
     },
-  },
 };
 </script>
 <style>

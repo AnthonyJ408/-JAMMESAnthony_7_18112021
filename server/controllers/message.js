@@ -11,7 +11,7 @@ exports.createMessage = (req, res, next) => {
     const messageFile = {
       //L'opérateur spread ... est utilisé pour faire une copie de tous les éléments de req.body
       ...messageRequest,
-      //Récupération de l'image de façon dynamique dans le dossier images
+      //Création de l'url avec multer
       fileUrl: `${req.protocol}://${req.get('host')}/images/${
         req.file.filename
       }`,
@@ -50,7 +50,7 @@ exports.modifyMessage = (req, res, next) => {
       }
     : { ...req.body };
   console.log(messageObject);
-  //Méthode .updateOne qui prend deux paramétres l'id du produit et le nouveau produit à actualiser
+  //Méthode .update qui prend deux paramétres l'id du produit et le nouveau produit à actualiser
   const id = req.params.id;
   Message.update(messageObject, {
     where: { id: id },
@@ -83,7 +83,7 @@ exports.deleteMessage = (req, res, next) => {
 };
 
 exports.getAllMessage = (req, res, next) => {
-  //Méthode .find qui va retourner toute la colection messages stockée dans MongoDB
+  //Méthode .find qui va retourner toute la colection messages stockée dans mySQL trier via la date de création
   Message.findAll({ limit: 50, order: [['createdAt', 'DESC']] })
     .then((messages) => {
       res.status(200).json(messages);

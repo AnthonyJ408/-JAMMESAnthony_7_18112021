@@ -1,7 +1,6 @@
 const Sequelize = require('sequelize');
 const config = require('../config/config');
 const db = {};
-const bcrypt = require('bcrypt');
 
 const sequelize = new Sequelize(
   config.database,

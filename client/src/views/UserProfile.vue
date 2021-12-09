@@ -94,6 +94,7 @@
 </template>
 
 <script>
+//Page de profil avec suppression et modification(pour le moment pas fonctionel)
 import userNav from "../components/userNav.vue";
 import { mapActions } from "vuex";
 export default {
@@ -109,6 +110,7 @@ export default {
   },
   methods: {
     ...mapActions({ deleteUser: "deleteUser" }),
+    //Action vueex pour une requête delete de l'utilisateur avec retour sur la page de connexion
     async onDelete() {
       await this.deleteUser(this.user.id)
         .then(() => {

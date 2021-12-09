@@ -42,7 +42,7 @@ import { mapActions, mapGetters } from "vuex";
 export default {
   components: { userNav, wallMessage },
   data: () => ({}),
-
+  // en cours de dev pour les commentaires
   methods: {
     ...mapActions({
       loadPosts: "loadPosts",
@@ -60,18 +60,6 @@ export default {
       getAllUsers: "getAllUsers",
       getAllComments: "getAllComments",
     }),
-    user() {
-      try {
-        const users = this.getAllUsers.data;
-        return (
-          users.find((user) => localStorage.getItem("id") == user.id) || {
-            fullName: null,
-          }
-        );
-      } catch (err) {
-        return err;
-      }
-    },
   },
 };
 </script>

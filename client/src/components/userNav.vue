@@ -1,4 +1,3 @@
-
   <template>
   <v-main style="box-shadow: none" class="overflow-hidden">
     <v-app-bar
@@ -31,6 +30,7 @@
 </template>
 
 <script>
+// Barre de navigation avec les données de l'utilisateur aprés connection
 export default {
   name: "userNav",
 

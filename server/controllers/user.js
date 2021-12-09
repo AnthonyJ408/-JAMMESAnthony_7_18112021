@@ -1,4 +1,3 @@
-//Récupération du modèle User de sequelize
 const db = require('../models');
 const User = db.users;
 const config = require('../config/authConfig');
@@ -15,7 +14,7 @@ exports.signup = (req, res, next) => {
     User.create({
       fullName: req.body.fullName,
       email: req.body.email,
-      //Méthode hash de bcrypt qui va éxécuter 9 "salt" ou "round" de l'algorithme sur le mot de passe pour le crypté
+      //Méthode hash de bcrypt qui va éxécuter 8 "salt" ou "round" de l'algorithme sur le mot de passe pour le crypté
       password: bcrypt.hashSync(req.body.password, 8),
     })
       .then((user) => {

@@ -183,6 +183,7 @@ export default {
       mode: "login",
       message: "",
       valid: true,
+      //Régle de validation des champs de saisie
       firstNameRules: [
         (v) => !!v || "Prénom requis",
         (v) => (v && v.length <= 15) || "Doit contenir maximum 15 caractères",
@@ -206,11 +207,13 @@ export default {
     };
   },
   mounted() {
+    //redirection HomePage si connecté
     if (this.loggedIn) {
       this.$router.push("/UserHome");
     }
   },
   methods: {
+    //Requête de connexion via vueex et axios
     handleLogin() {
       this.$refs.form.validate();
       if (this.$refs.form.validate()) {
@@ -221,6 +224,7 @@ export default {
       }
     },
     handleRegister() {
+      //Requête d'enregistrement utilisateur via vueex et axios
       this.user.fullName = this.user.lastName + " " + this.user.firstName;
       this.message = "";
       this.submitted = true;
@@ -245,6 +249,7 @@ export default {
         );
       }
     },
+    //Transition entre le mode login ou register des v-if v-else
     triggerTransition(object, animation, mode) {
       const element = document.querySelector(`.${object}`);
       element.classList.add(`${animation}`);

@@ -4,7 +4,7 @@ const jwt = require('jsonwebtoken');
 const config = require('../config/authConfig');
 const Op = db.Sequelize.Op;
 const Role = db.roles;
-
+//middleware d'authenfication avec JWT qui controle le token
 verifyToken = (req, res, next) => {
   let token = req.headers['x-access-token'];
   if (!token) {
@@ -23,7 +23,7 @@ verifyToken = (req, res, next) => {
     next();
   });
 };
-
+//middleware qui récupére le UserId de la requête, pour remonter via les relations de table SQL si l'utilisateur est admin ou non
 isAdmin = (req, res, next) => {
   User.findByPk(req.body.userId)
     .then((user) => {

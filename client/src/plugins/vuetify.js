@@ -15,3 +15,4 @@ export default new Vuetify({
     },
   },
 });
+//Bibliothéque Vuetify pour l'utilisation de leurs composants

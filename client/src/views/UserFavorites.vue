@@ -7,6 +7,7 @@
 </template>
 
 <script>
+// futur page pour les favoris de l'utilisateur
 export default {
   name: "UserFavorites",
   data() {

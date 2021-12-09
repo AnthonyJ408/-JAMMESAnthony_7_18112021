@@ -1,7 +1,7 @@
 import axios from 'axios';
 import authHeader from './authHeader';
 const API_URL = 'http://localhost:3000/api';
-
+// Requête axios pour les actions utilisateurs
 class UserService {
   getAllMessage() {
     return axios.get(API_URL + '/messages', { headers: authHeader() });
