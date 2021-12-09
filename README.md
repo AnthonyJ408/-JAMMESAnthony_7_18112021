@@ -44,7 +44,7 @@ Créer le fichier config.js
     
 Etape 3:
   Il faut initialiser la table "roles" dans mysql
-  pour cela j'ai créé une fonction dans server/models/index.js de la ligne 43 à 107
+  pour cela j'ai créé une fonction dans server/models/index.js de la ligne 34 à 99
   qu'il vous suffit de décommenter et de commenter à la place db.sequelize.sync(); ligne 42.
   Ceci va créer deux utilisateurs avec le rôle admin et user.
   Si vous préférer les créer vous même sacher que la clé dans authConfig est demandé 
