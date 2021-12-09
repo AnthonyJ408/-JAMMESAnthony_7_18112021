@@ -4,7 +4,8 @@ Groupomania: Projet 7 Openclassrooms
 Etape 1:
 
 Cloner le projet,
-ensuite lancer $ npm install dans le terminal
+ensuite en étant à la racine du projet  lancer $cd server puis $ npm install.
+Et $cd ../client et  $npm install.
 
 Etape 2:
 
