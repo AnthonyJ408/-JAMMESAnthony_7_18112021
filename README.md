@@ -7,6 +7,7 @@ Cloner le projet,
 ensuite en étant à la racine du projet  lancer $cd server puis $ npm install.
 Et $cd ../client et  $npm install.
 Assurez vous d'avoir "nodemon" d'installer également.
+
 Etape 2:
 
 Pour que les données de l'application soient stockées il faut se connecter à notre base de données.
