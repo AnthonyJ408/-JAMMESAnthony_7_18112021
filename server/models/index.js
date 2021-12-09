@@ -40,7 +40,7 @@ db.roles.hasOne(db.users, {
 db.users.belongsTo(db.roles);
 db.MOD = [1, 2];
 db.sequelize.sync();
-// .sync({ force: true })
+// db.sequelize.sync({ force: true })
 // .then(() => {
 //   db.roles.create({ id: 1, name: 'user' });
 // })

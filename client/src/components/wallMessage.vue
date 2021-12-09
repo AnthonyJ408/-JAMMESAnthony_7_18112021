@@ -11,11 +11,7 @@
             <p>{{ description }}</p>
             <p>
               Par {{ author }} le
-              {{
-                createdAt.slice(0, 10).split("-").reverse().join("/") +
-                " à " +
-                createdAt.slice(11, 16)
-              }}
+              {{ formatedDate }}
             </p>
           </v-card-text>
         </router-link>
@@ -59,7 +55,12 @@ export default {
     return {
       comment: "",
       showPost: true,
+      formatedDate: "",
     };
+  },
+  mounted() {
+    let objDate = new Date(this.createdAt);
+    return (this.formatedDate = objDate.toLocaleString("fr-FR"));
   },
   computed: {
     ...mapGetters({
@@ -96,6 +97,7 @@ export default {
       }
     },
   },
+
   methods: {
     ...mapActions({
       addComment: "addComment",

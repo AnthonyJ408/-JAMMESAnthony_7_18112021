@@ -42,9 +42,7 @@ import { mapActions, mapGetters } from "vuex";
 export default {
   components: { userNav, wallMessage },
   data: () => ({}),
-  mounted() {
-    this.loadPosts();
-  },
+
   methods: {
     ...mapActions({
       loadPosts: "loadPosts",
@@ -52,6 +50,10 @@ export default {
       loadComments: "loadComments",
     }),
   },
+  mounted() {
+    this.loadPosts();
+  },
+
   computed: {
     ...mapGetters({
       getAllMessages: "getAllMessages",
