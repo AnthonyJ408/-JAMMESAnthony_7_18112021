@@ -73,23 +73,24 @@ exports.login = (req, res, next) => {
           message: 'Mot de passe incorrect!',
         });
       }
-
-      const token = jwt.sign({ id: user.id }, config.secret, {
-        expiresIn: 86400, // 24 hours
-      });
-
-      const authorities = [];
       user
         .getRole()
 
         .then((roles) => {
-          authorities.push('ROLE_' + roles.name.toUpperCase());
+          const token = jwt.sign(
+            {
+              id: user.id,
+              fullName: user.fullName,
+              email: user.email,
+              roles: roles.name,
+            },
+            config.secret,
+            {
+              expiresIn: 86400, // 24 hours
+            }
+          );
 
           res.status(200).send({
-            id: user.id,
-            fullName: user.fullName,
-            email: user.email,
-            roles: authorities,
             accessToken: token,
           });
         });

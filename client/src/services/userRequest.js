@@ -26,8 +26,8 @@ class UserService {
       }
     );
   }
-  getAllUsers() {
-    return axios.get(API_URL, '/auth/users', { headers: authHeader() });
+  getUser(id) {
+    return axios.get(API_URL, '/auth/user/' + id, { headers: authHeader() });
   }
   deleteUser(id) {
     return axios.delete(API_URL + `/auth/users/${id}`, {

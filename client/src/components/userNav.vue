@@ -44,16 +44,17 @@ export default {
       return this.$store.state.auth.user;
     },
   },
-  mounted() {
-    if (!this.currentUser) {
-      this.$router.push("/SignIn");
-    }
-  },
+
   methods: {
     logOut() {
       this.$store.dispatch("auth/logout");
       this.$router.push("/SignIn");
     },
+  },
+  mounted() {
+    if (!this.currentUser) {
+      this.$router.push("/SignIn");
+    }
   },
 };
 </script>

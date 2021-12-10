@@ -1,7 +1,11 @@
 import AuthService from '../services/authService';
-import router from '../router';
+import jwt_decode from 'jwt-decode';
 
-const user = JSON.parse(localStorage.getItem('user'));
+let user = null;
+if (JSON.parse(localStorage.getItem('token')) != null) {
+  user = jwt_decode(JSON.parse(localStorage.getItem('token')).accessToken);
+}
+
 const initialState = user
   ? { status: { loggedIn: true }, user }
   : { status: { loggedIn: false }, user: null };
@@ -14,12 +18,11 @@ export const auth = {
       return AuthService.login(user).then(
         (user) => {
           commit('loginSuccess', user);
-          router.push('/');
           return Promise.resolve(user);
         },
         (error) => {
           commit('loginFailure');
-          return Promise.resolve(error);
+          return Promise.reject(error);
         }
       );
     },
@@ -35,7 +38,7 @@ export const auth = {
         },
         (error) => {
           commit('registerFailure');
-          return Promise.resolve(error.data);
+          return Promise.reject(error);
         }
       );
     },

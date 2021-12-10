@@ -111,7 +111,7 @@ export default {
   mounted() {
     if (this.user.fullName == this.post.author) {
       this.verif = true;
-    } else if (this.user.roles[0] == "ROLE_ADMIN") {
+    } else if (this.user.roles == "admin") {
       this.verif = true;
     }
   },

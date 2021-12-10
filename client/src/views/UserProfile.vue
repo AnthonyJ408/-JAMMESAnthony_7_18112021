@@ -105,7 +105,7 @@ export default {
       successful: true,
       click: "",
       message: "Non fonctionel",
-      user: this.$store.state.auth.user,
+      user: "",
     };
   },
   methods: {
@@ -124,13 +124,12 @@ export default {
         });
     },
   },
-
   mounted() {
-    const name = this.user.fullName.split(" ");
-    this.user.firstName = name[0];
-    this.user.lastName = name[1];
-
-    return;
+    const loggedUser = this.$store.state.auth.user;
+    const name = loggedUser.fullName.split(" ");
+    loggedUser.firstName = name[1];
+    loggedUser.lastName = name[0];
+    return (this.user = loggedUser);
   },
 };
 </script>

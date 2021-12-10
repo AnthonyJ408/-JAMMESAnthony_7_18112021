@@ -206,10 +206,14 @@ export default {
       ],
     };
   },
-  mounted() {
-    //redirection HomePage si connecté
+  computed: {
+    loggedIn() {
+      return this.$store.state.auth.status.loggedIn;
+    },
+  },
+  created() {
     if (this.loggedIn) {
-      this.$router.push("/UserHome");
+      this.$router.push("/userHome");
     }
   },
   methods: {
@@ -217,11 +221,22 @@ export default {
     handleLogin() {
       this.$refs.form.validate();
       if (this.$refs.form.validate()) {
-        this.$store.dispatch("auth/login", this.user).then(() => {
-          this.message = "Utilisateur inconnu!";
-        });
+        this.$store.dispatch("auth/login", this.user).then(
+          () => {
+            this.$router.push("/");
+          },
+
+          (error) => {
+            console.log(error.response.data);
+            this.message =
+              error.response.data.message !== undefined
+                ? error.response.data.message
+                : error.response.data.error;
+          }
+        );
       }
     },
+
     handleRegister() {
       //Requête d'enregistrement utilisateur via vueex et axios
       this.user.fullName = this.user.lastName + " " + this.user.firstName;
@@ -229,19 +244,17 @@ export default {
       this.submitted = true;
       if (this.$refs.form.validate()) {
         this.$store.dispatch("auth/register", this.user).then(
-          (data) => {
-            console.log(data);
-            this.message = data.message;
+          (response) => {
+            this.message = response.message;
             this.successful = true;
             this.$refs.form.reset();
             this.mode = "login";
           },
           (error) => {
-            console.log(error);
             this.message =
-              error.response.data.error !== undefined
-                ? error.response.data.error.errors[0].message
-                : error.response.data.errors[0].msg;
+              error.response.data.message !== undefined
+                ? error.response.data.message
+                : error.response.data.error.errors[0].message;
 
             this.successful = false;
           }

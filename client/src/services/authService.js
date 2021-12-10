@@ -1,4 +1,5 @@
 import axios from 'axios';
+import jwt_decode from 'jwt-decode';
 
 const API_URL = 'http://localhost:3000/api/auth/';
 // Requête axios pour l'authentification
@@ -10,17 +11,16 @@ class AuthService {
         email: user.email,
         password: user.password,
       })
-      .then((response) => {
-        if (response.data.accessToken) {
-          localStorage.setItem('user', JSON.stringify(response.data));
-        }
-
-        return response.data;
+      .then((token) => {
+        localStorage.setItem('token', JSON.stringify(token.data));
+        const decodedToken = jwt_decode(token.data.accessToken);
+        return decodedToken;
       });
   }
 
   logout() {
-    localStorage.removeItem('user');
+    localStorage.removeItem('posts');
+    localStorage.removeItem('token');
   }
 
   register(user) {
