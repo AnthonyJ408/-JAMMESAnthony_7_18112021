@@ -5,15 +5,20 @@ Le but de cet outil est de faciliter les interactions entre collègues.
 Le département RH de Groupomania a laissé libre cours à son imagination pour les fonctionnalités 
 du réseau et a imaginé plusieurs briques pour favoriser les échanges entre collègues.
 
-
+<p align="center">
 ![Screen](./client/src/assets/exemple_rm.png)
-
+</p>
 
 ### Pré-requis
 
 Cloner le projet,
-ensuite en étant à la racine du projet  lancer ``$cd server`` puis ``$ npm install``.
-Et ``$cd ../client`` et  ``$npm install``.
+ensuite en étant à la racine du projet  lancer
+
+```$cd server 
+$ npm install
+$cd ../client
+$npm install```
+
 Assurez vous d'avoir "nodemon" d'installer également.
 
 ### Installation
