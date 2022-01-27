@@ -14,10 +14,13 @@ du réseau et a imaginé plusieurs briques pour favoriser les échanges entre co
 Cloner le projet,
 ensuite en étant à la racine du projet  lancer
 
-```$cd server 
+```
+$cd server 
 $ npm install
 $cd ../client
-$npm install```
+$npm install
+
+```
 
 Assurez vous d'avoir "nodemon" d'installer également.
 
@@ -28,11 +31,19 @@ Sur le projet les identifiants ne sont pas fournis mais le code utilise le chemi
 je vous conseille donc de créer les mêmes dans le dossier server ``$cd server``
 
 Créer le dossier config
-  ``$ mkdir config``
-  ``$ cd config``
+ ```
+
+  $ mkdir config
+  $ cd config
+
+ ```
  
 Créer le fichier authConfig.js 
-``$ touch authConfig.js``
+```
+
+$ touch authConfig.js
+
+```
   avec ce modèle:
     module.exports = {
     secret: 'clé JWT',
@@ -52,8 +63,11 @@ Créer le fichier config.js
     };
     
 Créer également le dossier statique images qui va recevoir les fichiers multimédias des utilisateurs
-    ``$ cd ..``
-    ``$ mkdir images``
+    ```
+  $ cd ..
+  $ mkdir images
+
+```
 
 Il faut initialiser la table "roles" dans mysql
   pour cela j'ai créé une fonction dans server/models/index.js de la ligne 34 à 99
@@ -70,8 +84,12 @@ Lancer deux terminals distincts :
   ``npm start``
   
   le deuxième sur => 
-  ``cd client``
-  ``npm run serve``
+  ```
+
+  cd client
+  npm run serve
+
+```
 
 ## Fabriqué avec
 
