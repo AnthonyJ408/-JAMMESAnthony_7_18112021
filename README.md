@@ -63,7 +63,8 @@ Créer le fichier config.js
     };
     
 Créer également le dossier statique images qui va recevoir les fichiers multimédias des utilisateurs
-    ```
+
+```
   $ cd ..
   $ mkdir images
 
@@ -80,11 +81,14 @@ Il faut initialiser la table "roles" dans mysql
 
 Lancer deux terminals distincts :
   le premier sur => 
-  ``cd server``
-  ``npm start``
+```
+  cd server
+  npm start
+  
+```
   
   le deuxième sur => 
-  ```
+```
 
   cd client
   npm run serve
