@@ -27,8 +27,7 @@ Assurez vous d'avoir "nodemon" d'installer également.
 ### Installation
 
 Pour que les données de l'application soient stockées il faut se connecter à notre base de données.
-Sur le projet les identifiants ne sont pas fournis mais le code utilise le chemin de mes variables d'environnement 
-je vous conseille donc de créer les mêmes dans le dossier server ``$cd server``
+Sur le projet les identifiants ne sont pas fournis mais le code utilise le chemin de mes variables d'environnement je vous conseille donc de créer les mêmes dans le dossier server ``$cd server``
 
 Créer le dossier config
  ```
