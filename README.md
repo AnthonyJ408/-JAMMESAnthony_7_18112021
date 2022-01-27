@@ -6,7 +6,7 @@ Le département RH de Groupomania a laissé libre cours à son imagination pour 
 du réseau et a imaginé plusieurs briques pour favoriser les échanges entre collègues.
 
 <p align="center">
-![Screen](./client/src/assets/exemple_rm.png)
+<img src="./client/src/assets/exemple_rm.png">
 </p>
 
 ### Pré-requis
