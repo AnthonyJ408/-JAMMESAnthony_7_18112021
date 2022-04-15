@@ -37,30 +37,15 @@
         </v-card-text>
       </v-card></v-container
     >
-
-    <v-container
-      ><wallComment
-        v-show="show"
-        v-for="comment in rightComment"
-        :id="comment.id"
-        :userId="comment.userId"
-        :postId="comment.postId"
-        :comment="comment.comment"
-        :createdAt="comment.createdAt"
-        :key="comment.id"
-      ></wallComment
-    ></v-container>
   </div>
 </template>
 
 <script>
 // Page d'accueil avec affichage des composants wallMessage et wallComment
-import wallComment from "../components/wallComment";
 import { mapActions, mapGetters } from "vuex";
 export default {
   name: "wallMessage",
   props: ["id", "title", "description", "image", "author", "createdAt"],
-  components: { wallComment },
   data() {
     return {
       comment: "",

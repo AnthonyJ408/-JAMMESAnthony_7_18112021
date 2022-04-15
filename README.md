@@ -63,7 +63,8 @@ Créer le fichier config.js
     };
     
 Créer également le dossier statique images qui va recevoir les fichiers multimédias des utilisateurs
-    ```
+
+```
   $ cd ..
   $ mkdir images
 
